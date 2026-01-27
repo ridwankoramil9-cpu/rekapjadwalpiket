@@ -32,7 +32,7 @@
         <!-- Header -->
         <div class="bg-blue-600 p-6 text-center text-white">
             <h1 class="text-2xl font-bold"><i class="fas fa-hospital-user mr-2"></i>Sistem Jadwal RS</h1>
-            <p class="text-blue-100 text-xs mt-1 uppercase tracking-wider">Multi-File Upload & Auto Cleaner</p>
+            <p class="text-blue-100 text-xs mt-1 uppercase tracking-wider">Multi-File Upload & Smart Cleaner</p>
         </div>
 
         <!-- Tab Navigation -->
@@ -86,7 +86,7 @@
                         </div>
                     </div>
 
-                    <!-- File Input (MULTIPLE SUPPORT) -->
+                    <!-- File Input -->
                     <div>
                         <label class="block text-gray-700 text-xs font-bold mb-2 uppercase tracking-wide">
                             File Jadwal (.xlsx)
@@ -108,7 +108,7 @@
                     </div>
 
                     <!-- AREA LOG HASIL UPLOAD -->
-                    <div id="uploadLogArea" class="hidden mt-4 bg-gray-50 rounded-lg border border-gray-200 p-4 max-h-60 overflow-y-auto">
+                    <div id="uploadLogArea" class="hidden mt-4 bg-gray-50 rounded-lg border border-gray-200 p-4 max-h-80 overflow-y-auto">
                         <h3 class="text-xs font-bold text-gray-700 mb-3 border-b pb-2 flex justify-between items-center">
                             <span>Log Proses Upload:</span>
                             <span id="progressText" class="text-blue-600">0/0</span>
@@ -190,8 +190,57 @@
             }
         }
 
-        // --- FUNGSI LOG RINCI ---
-        function addLogItem(fileName, status, message, updatedRows = 0, fixedDataCount = 0) {
+        // --- FUNGSI MENAMPILKAN DETAIL LOG (POPUP) ---
+        window.showDetailLog = function(fileName, logsEncoded) {
+            const logs = JSON.parse(decodeURIComponent(logsEncoded));
+            
+            let tableRows = logs.map(log => `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="p-2 text-center">${log.row}</td>
+                    <td class="p-2 font-mono text-gray-600">${log.nip}</td>
+                    <td class="p-2 text-center">${log.dateIndex}</td>
+                    <td class="p-2 text-red-600 text-[10px]">${log.original}</td>
+                    <td class="p-2 text-green-600 font-bold text-[10px]">${log.fixed}</td>
+                    <td class="p-2 text-gray-500 text-[10px] italic">${log.reason}</td>
+                </tr>
+            `).join('');
+
+            const tableHtml = `
+                <div class="text-left text-xs mb-2 text-gray-600">
+                    File: <b>${fileName}</b><br>
+                    Jumlah Perbaikan: <b>${logs.length}</b> data
+                </div>
+                <div class="overflow-y-auto max-h-64 border rounded">
+                    <table class="w-full text-xs text-left">
+                        <thead class="bg-gray-100 text-gray-700 sticky top-0">
+                            <tr>
+                                <th class="p-2 text-center">Baris</th>
+                                <th class="p-2">NIP</th>
+                                <th class="p-2 text-center">Tgl</th>
+                                <th class="p-2">Asli</th>
+                                <th class="p-2">Hasil</th>
+                                <th class="p-2">Sebab</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            Swal.fire({
+                title: 'Rincian Perbaikan Data',
+                html: tableHtml,
+                width: '600px',
+                showCloseButton: true,
+                focusConfirm: false,
+                confirmButtonText: 'Tutup'
+            });
+        };
+
+        // --- FUNGSI LOG ITEM UTAMA ---
+        function addLogItem(fileName, status, message, updatedRows = 0, fixedDataCount = 0, changeLog = []) {
             const list = document.getElementById('uploadLogList');
             const li = document.createElement('li');
             li.className = "flex items-start p-3 bg-white rounded shadow-sm border border-gray-100";
@@ -199,17 +248,25 @@
             let iconHtml = '';
             let statusColor = '';
             let detailText = '';
+            let actionButton = '';
 
             if (status === 'success') {
                 iconHtml = '<div class="bg-green-100 text-green-600 rounded-full p-1 mr-3"><i class="fas fa-check text-xs"></i></div>';
                 statusColor = 'text-green-700';
                 
-                // Format Pesan Log yang Lebih Informatif
                 let fixMsg = "";
                 if (fixedDataCount > 0) {
-                    fixMsg = `<br><span class="text-orange-600 text-[10px]"><i class="fas fa-wrench mr-1"></i>Perbaikan Format (Spasi/Panjang): <b>${fixedDataCount} data</b></span>`;
+                    fixMsg = `<br><span class="text-orange-600 text-[10px] font-semibold"><i class="fas fa-wrench mr-1"></i>${fixedDataCount} data diperbaiki formatnya.</span>`;
+                    
+                    // Encode data log agar aman dikirim ke fungsi onClick
+                    const encodedLogs = encodeURIComponent(JSON.stringify(changeLog));
+                    actionButton = `
+                        <button onclick="showDetailLog('${fileName}', '${encodedLogs}')" class="mt-2 text-[10px] bg-blue-50 text-blue-600 px-2 py-1 rounded hover:bg-blue-100 border border-blue-200 transition">
+                            <i class="fas fa-list-ul mr-1"></i> Lihat Rincian Perbaikan
+                        </button>
+                    `;
                 } else {
-                    fixMsg = `<br><span class="text-green-600 text-[10px]"><i class="fas fa-star mr-1"></i>Data Bersih (Tidak ada perbaikan)</span>`;
+                    fixMsg = `<br><span class="text-green-600 text-[10px]"><i class="fas fa-star mr-1"></i>Format Data Sempurna</span>`;
                 }
 
                 detailText = `<span class="font-bold text-gray-700">Update NIP: ${updatedRows} pegawai.</span>${fixMsg}`;
@@ -227,6 +284,7 @@
                         <span class="text-[10px] font-bold uppercase ${statusColor}">${status === 'success' ? 'SUKSES' : 'ERROR'}</span>
                     </div>
                     <p class="text-xs text-gray-500 leading-tight">${detailText}</p>
+                    ${actionButton}
                 </div>
             `;
             list.appendChild(li);
@@ -262,7 +320,6 @@
                 return;
             }
 
-            // Reset Log Area
             const logArea = document.getElementById('uploadLogArea');
             const logList = document.getElementById('uploadLogList');
             logList.innerHTML = '';
@@ -275,26 +332,20 @@
             const room = document.getElementById('room').value;
             const month = document.getElementById('uploadMonth').value;
 
-            // Kunci tombol submit
             const btn = document.getElementById('btnUpload');
             btn.disabled = true;
             btn.classList.add('opacity-50', 'cursor-not-allowed');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sedang Memproses...';
 
-            // --- LOOP UPLOAD ---
             for (let i = 0; i < totalFiles; i++) {
                 const file = files[i];
-                
-                // Update Progress
                 const progressMsg = `${i + 1} dari ${totalFiles}`;
                 document.getElementById('progressText').textContent = progressMsg;
                 toggleLoading(true, `Mengupload File ${progressMsg}`, file.name);
 
                 try {
-                    // Convert to Base64
                     const base64 = await toBase64(file);
                     
-                    // Kirim ke Backend
                     const response = await fetch(SCRIPT_URL, {
                         method: 'POST',
                         body: JSON.stringify({
@@ -309,10 +360,11 @@
                     const result = await response.json();
 
                     if (result.status === 'success') {
-                        const rows = result.data && result.data.updatedRows ? result.data.updatedRows : 0;
-                        const fixed = result.data && result.data.fixedDataCount ? result.data.fixedDataCount : 0;
+                        const rows = result.data.updatedRows || 0;
+                        const fixed = result.data.fixedDataCount || 0;
+                        const logs = result.data.changeLog || [];
                         
-                        addLogItem(file.name, 'success', result.message, rows, fixed);
+                        addLogItem(file.name, 'success', result.message, rows, fixed, logs);
                         successCount++;
                     } else {
                         addLogItem(file.name, 'error', result.message);
@@ -331,7 +383,6 @@
             btn.classList.remove('opacity-50', 'cursor-not-allowed');
             btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Proses Semua File';
 
-            // Ringkasan Akhir
             if (failCount === 0) {
                 Swal.fire({
                     title: 'Selesai!',
@@ -347,7 +398,6 @@
             }
         });
 
-        // Helper: Convert File to Base64
         function toBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
