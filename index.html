@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Manajemen Jadwal Kerja RS</title>
+    <title>Sistem Manajemen RS</title>
     <!-- Tailwind & Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,20 +13,24 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
+        /* Base Animations */
         .fade-in { animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
+        /* Sidebar Active State - Sea Theme */
         .nav-item.active { 
             background: linear-gradient(90deg, rgba(34, 211, 238, 0.15) 0%, transparent 100%); 
             border-right: 4px solid #facc15; 
             color: #22d3ee; 
         }
         
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f0f9ff; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #7dd3fc; border-radius: 3px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
 
+        /* Animated Background */
         .animated-bg { 
             background: linear-gradient(-45deg, #083344, #0e7490, #0f766e, #164e63); 
             background-size: 400% 400%; 
@@ -45,49 +49,50 @@
 <body class="bg-slate-50 font-sans h-screen overflow-hidden flex text-slate-800">
 
     <!-- VIEW: LOGIN -->
-    <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center animated-bg">
-        <div class="glass-card p-10 rounded-3xl shadow-2xl w-96 text-center fade-in border-t-4 border-yellow-400 relative overflow-hidden">
+    <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center animated-bg p-4">
+        <div class="glass-card p-8 md:p-10 rounded-3xl shadow-2xl w-full max-w-sm text-center fade-in border-t-4 border-yellow-400 relative overflow-hidden">
             <div class="mb-6 inline-block p-4 rounded-full bg-cyan-50 relative z-10 shadow-sm">
-                <i class="fas fa-hospital-user text-5xl text-cyan-600"></i>
+                <i class="fas fa-hospital-user text-4xl md:text-5xl text-cyan-600"></i>
             </div>
-            <h2 class="text-3xl font-bold text-slate-800 mb-2 tracking-tight">E-Rekap RS</h2>
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2 tracking-tight">E-Rekap RS</h2>
             <p class="text-slate-500 text-sm mb-8 font-medium">Sistem Informasi Manajemen Jadwal</p>
             <div class="flex justify-center relative z-10">
                 <div id="g_id_onload" data-client_id="783459415718-mp0vsmd2lopajf2ut0aqc6drjrs95pu8.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
                 <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="pill" data-logo_alignment="left"></div>
             </div>
             <p id="loginStatus" class="mt-6 text-xs text-red-500 font-semibold"></p>
+            <div class="mt-8 text-[10px] text-slate-400 font-medium">&copy; 2026 RS Management System v2.2</div>
         </div>
     </div>
 
     <!-- VIEW: REGISTER -->
-    <div id="view-register" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-cyan-950/80 backdrop-blur-sm">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md fade-in border-t-4 border-yellow-400">
-            <div class="text-center mb-6"><h2 class="text-2xl font-bold text-cyan-800">Selamat Datang!</h2><p class="text-sm text-slate-500">Lengkapi profil Anda untuk melanjutkan</p></div>
+    <div id="view-register" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-cyan-950/80 backdrop-blur-sm p-4">
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md fade-in border-t-4 border-yellow-400 max-h-[90vh] overflow-y-auto">
+            <div class="text-center mb-6"><h2 class="text-xl md:text-2xl font-bold text-cyan-800">Selamat Datang!</h2><p class="text-sm text-slate-500">Lengkapi profil Anda untuk melanjutkan</p></div>
             <form id="registerForm" class="space-y-4">
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">Email</label><input type="text" id="regEmail" disabled class="w-full bg-slate-50 border p-3 rounded-lg text-sm"></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama</label><input type="text" id="regNama" required class="w-full border p-3 rounded-lg text-sm"></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">Ruangan</label><select id="regRuangan" required class="w-full border p-3 rounded-lg text-sm"><option value="">-- Pilih --</option><option value="INSTALASI ANESTESI">INSTALASI ANESTESI</option><option value="INSTALASI BEDAH SENTRAL">INSTALASI BEDAH SENTRAL</option><option value="INSTALASI FARMASI">INSTALASI FARMASI</option><option value="INSTALASI GAT">INSTALASI GAT</option><option value="INSTALASI GAWAT DARURAT">INSTALASI GAWAT DARURAT</option><option value="INSTALASI GIZI">INSTALASI GIZI</option><option value="INSTALASI HEMODIALISA">INSTALASI HEMODIALISA</option><option value="INSTALASI IGD DOKTER">INSTALASI IGD DOKTER</option><option value="INSTALASI IGD PERAWAT">INSTALASI IGD PERAWAT</option><option value="INSTALASI LABORATORIUM">INSTALASI LABORATORIUM</option><option value="INSTALASI PEMELIHARAAN LINGKUNGAN">INSTALASI PEMELIHARAAN LINGKUNGAN</option><option value="INSTALASI PEMELIHARAAN SARANA">INSTALASI PEMELIHARAAN SARANA</option><option value="INSTALASI RADIOLOGI">INSTALASI RADIOLOGI</option><option value="INSTALASI RAWAT JALAN">INSTALASI RAWAT JALAN</option><option value="INSTALASI REHAB MEDIK">INSTALASI REHAB MEDIK</option><option value="INSTALASI REKAM MEDIS">INSTALASI REKAM MEDIS</option><option value="INSTALASI SIM RS">INSTALASI SIM RS</option><option value="RUANG ANGGREK">RUANG ANGGREK</option><option value="RUANG ANYELIR">RUANG ANYELIR</option><option value="RUANG ASTER">RUANG ASTER</option><option value="RUANG BOUGENVILLE">RUANG BOUGENVILLE</option><option value="RUANG FLAMBOYAN">RUANG FLAMBOYAN</option><option value="RUANG HCU">RUANG HCU</option><option value="RUANG ICCU">RUANG ICCU</option><option value="RUANG ICU">RUANG ICU</option><option value="RUANG IDIK">RUANG IDIK</option><option value="RUANG LILY">RUANG LILY</option><option value="RUANG MAWAR">RUANG MAWAR</option><option value="RUANG TERATAI ASOKA">RUANG TERATAI ASOKA</option><option value="RUANG VK BERSALIN">RUANG VK BERSALIN</option><option value="UNIT AMBULANCE">UNIT AMBULANCE</option><option value="UNIT CSSD">UNIT CSSD</option><option value="UNIT KEUANGAN KASIR">UNIT KEUANGAN KASIR</option><option value="UNIT KLAIM">UNIT KLAIM</option><option value="UNIT LOUNDRY">UNIT LOUNDRY</option><option value="UNIT PEMULASARAN JENAZAH">UNIT PEMULASARAN JENAZAH</option><option value="UNIT PENGADUAN">UNIT PENGADUAN</option><option value="UNIT PPI">UNIT PPI</option></select></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">WhatsApp</label><input type="text" id="regHP" required class="w-full border p-3 rounded-lg text-sm"></div>
-                <button type="submit" class="w-full bg-cyan-600 text-white py-3 rounded-lg font-bold">Daftar</button>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">Email Akun</label><input type="text" id="regEmail" disabled class="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg text-sm text-slate-500 font-medium"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap</label><input type="text" id="regNama" required class="w-full border border-slate-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 outline-none"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">Unit / Ruangan</label><select id="regRuangan" required class="w-full border border-slate-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 bg-white"><option value="">-- Pilih --</option><option value="INSTALASI ANESTESI">INSTALASI ANESTESI</option><option value="INSTALASI BEDAH SENTRAL">INSTALASI BEDAH SENTRAL</option><option value="INSTALASI FARMASI">INSTALASI FARMASI</option><option value="INSTALASI GAT">INSTALASI GAT</option><option value="INSTALASI GAWAT DARURAT">INSTALASI GAWAT DARURAT</option><option value="INSTALASI GIZI">INSTALASI GIZI</option><option value="INSTALASI HEMODIALISA">INSTALASI HEMODIALISA</option><option value="INSTALASI IGD DOKTER">INSTALASI IGD DOKTER</option><option value="INSTALASI IGD PERAWAT">INSTALASI IGD PERAWAT</option><option value="INSTALASI LABORATORIUM">INSTALASI LABORATORIUM</option><option value="INSTALASI PEMELIHARAAN LINGKUNGAN">INSTALASI PEMELIHARAAN LINGKUNGAN</option><option value="INSTALASI PEMELIHARAAN SARANA">INSTALASI PEMELIHARAAN SARANA</option><option value="INSTALASI RADIOLOGI">INSTALASI RADIOLOGI</option><option value="INSTALASI RAWAT JALAN">INSTALASI RAWAT JALAN</option><option value="INSTALASI REHAB MEDIK">INSTALASI REHAB MEDIK</option><option value="INSTALASI REKAM MEDIS">INSTALASI REKAM MEDIS</option><option value="INSTALASI SIM RS">INSTALASI SIM RS</option><option value="RUANG ANGGREK">RUANG ANGGREK</option><option value="RUANG ANYELIR">RUANG ANYELIR</option><option value="RUANG ASTER">RUANG ASTER</option><option value="RUANG BOUGENVILLE">RUANG BOUGENVILLE</option><option value="RUANG FLAMBOYAN">RUANG FLAMBOYAN</option><option value="RUANG HCU">RUANG HCU</option><option value="RUANG ICCU">RUANG ICCU</option><option value="RUANG ICU">RUANG ICU</option><option value="RUANG IDIK">RUANG IDIK</option><option value="RUANG LILY">RUANG LILY</option><option value="RUANG MAWAR">RUANG MAWAR</option><option value="RUANG TERATAI ASOKA">RUANG TERATAI ASOKA</option><option value="RUANG VK BERSALIN">RUANG VK BERSALIN</option><option value="UNIT AMBULANCE">UNIT AMBULANCE</option><option value="UNIT CSSD">UNIT CSSD</option><option value="UNIT KEUANGAN KASIR">UNIT KEUANGAN KASIR</option><option value="UNIT KLAIM">UNIT KLAIM</option><option value="UNIT LOUNDRY">UNIT LOUNDRY</option><option value="UNIT PEMULASARAN JENAZAH">UNIT PEMULASARAN JENAZAH</option><option value="UNIT PENGADUAN">UNIT PENGADUAN</option><option value="UNIT PPI">UNIT PPI</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">WhatsApp</label><input type="text" id="regHP" required class="w-full border border-slate-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500" placeholder="08xxx"></div>
+                <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-3 rounded-lg font-bold shadow hover:shadow-lg transition">Simpan & Masuk</button>
             </form>
         </div>
     </div>
 
     <!-- VIEW: EDIT USER (ADMIN) -->
-    <div id="view-edit-user" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-cyan-950/70 backdrop-blur-sm overflow-y-auto py-10">
-        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg fade-in my-auto border border-slate-200">
+    <div id="view-edit-user" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-cyan-950/70 backdrop-blur-sm overflow-y-auto py-10 px-4">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg fade-in my-auto border border-slate-200 relative">
             <div class="flex justify-between items-center mb-5 border-b pb-3">
                 <h2 class="text-lg font-bold text-slate-800">Edit User</h2>
-                <button onclick="closeEditModal()" class="text-slate-400"><i class="fas fa-times"></i></button>
+                <button onclick="closeEditModal()" class="text-slate-400 p-2 hover:text-slate-600"><i class="fas fa-times"></i></button>
             </div>
             <form id="editUserForm" class="space-y-4">
                 <input type="hidden" id="editEmailHidden">
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-600 mb-1">Email</label><input type="text" id="editEmail" disabled class="w-full bg-slate-50 border p-2 rounded text-xs"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-slate-600 mb-1">Email</label><input type="text" id="editEmail" disabled class="w-full bg-slate-50 border p-2 rounded text-xs text-slate-500"></div>
                     <div><label class="block text-xs font-bold text-slate-600 mb-1">Role</label><select id="editRole" class="w-full border p-2 rounded text-xs bg-white"><option value="USER">User</option><option value="ADMIN">Admin</option></select></div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama</label><input type="text" id="editNama" class="w-full border p-2 rounded text-xs"></div>
                     <div><label class="block text-xs font-bold text-slate-600 mb-1">Ruangan</label><select id="editRuangan" class="w-full border p-2 rounded text-xs"><option value="INSTALASI ANESTESI">INSTALASI ANESTESI</option><option value="INSTALASI BEDAH SENTRAL">INSTALASI BEDAH SENTRAL</option><option value="INSTALASI FARMASI">INSTALASI FARMASI</option><option value="INSTALASI GAT">INSTALASI GAT</option><option value="INSTALASI GAWAT DARURAT">INSTALASI GAWAT DARURAT</option><option value="INSTALASI GIZI">INSTALASI GIZI</option><option value="INSTALASI HEMODIALISA">INSTALASI HEMODIALISA</option><option value="INSTALASI IGD DOKTER">INSTALASI IGD DOKTER</option><option value="INSTALASI IGD PERAWAT">INSTALASI IGD PERAWAT</option><option value="INSTALASI LABORATORIUM">INSTALASI LABORATORIUM</option><option value="INSTALASI PEMELIHARAAN LINGKUNGAN">INSTALASI PEMELIHARAAN LINGKUNGAN</option><option value="INSTALASI PEMELIHARAAN SARANA">INSTALASI PEMELIHARAAN SARANA</option><option value="INSTALASI RADIOLOGI">INSTALASI RADIOLOGI</option><option value="INSTALASI RAWAT JALAN">INSTALASI RAWAT JALAN</option><option value="INSTALASI REHAB MEDIK">INSTALASI REHAB MEDIK</option><option value="INSTALASI REKAM MEDIS">INSTALASI REKAM MEDIS</option><option value="INSTALASI SIM RS">INSTALASI SIM RS</option><option value="RUANG ANGGREK">RUANG ANGGREK</option><option value="RUANG ANYELIR">RUANG ANYELIR</option><option value="RUANG ASTER">RUANG ASTER</option><option value="RUANG BOUGENVILLE">RUANG BOUGENVILLE</option><option value="RUANG FLAMBOYAN">RUANG FLAMBOYAN</option><option value="RUANG HCU">RUANG HCU</option><option value="RUANG ICCU">RUANG ICCU</option><option value="RUANG ICU">RUANG ICU</option><option value="RUANG IDIK">RUANG IDIK</option><option value="RUANG LILY">RUANG LILY</option><option value="RUANG MAWAR">RUANG MAWAR</option><option value="RUANG TERATAI ASOKA">RUANG TERATAI ASOKA</option><option value="RUANG VK BERSALIN">RUANG VK BERSALIN</option><option value="UNIT AMBULANCE">UNIT AMBULANCE</option><option value="UNIT CSSD">UNIT CSSD</option><option value="UNIT KEUANGAN KASIR">UNIT KEUANGAN KASIR</option><option value="UNIT KLAIM">UNIT KLAIM</option><option value="UNIT LOUNDRY">UNIT LOUNDRY</option><option value="UNIT PEMULASARAN JENAZAH">UNIT PEMULASARAN JENAZAH</option><option value="UNIT PENGADUAN">UNIT PENGADUAN</option><option value="UNIT PPI">UNIT PPI</option></select></div>
                 </div>
@@ -105,54 +110,84 @@
                 </div>
                 <div class="pt-2 flex space-x-3">
                     <button type="button" onclick="closeEditModal()" class="w-1/3 bg-slate-200 py-2 rounded text-sm">Batal</button>
-                    <button type="submit" class="w-2/3 bg-cyan-600 text-white py-2 rounded text-sm">Simpan</button>
+                    <button type="submit" class="w-2/3 bg-cyan-600 text-white py-2 rounded text-sm hover:bg-cyan-700">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- VIEW: DASHBOARD -->
-    <div id="view-dashboard" class="hidden flex w-full h-full bg-slate-100">
+    <div id="view-dashboard" class="hidden flex w-full h-full bg-slate-100 relative">
+        
+        <!-- MOBILE OVERLAY (BACKDROP) -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
         <!-- SIDEBAR -->
-        <div class="w-64 bg-cyan-950 text-white flex flex-col shadow-2xl z-20">
-            <div class="p-6 border-b border-cyan-900 bg-cyan-950">
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-cyan-500 rounded-lg flex items-center justify-center font-bold text-lg">RS</div>
-                    <div><h1 class="text-lg font-bold">SIM RS</h1><p class="text-[10px] text-cyan-400">E-Rekap v2.2</p></div>
+        <div id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-cyan-950 text-white flex flex-col shadow-2xl z-30 transform -translate-x-full transition-transform duration-300 md:translate-x-0 md:relative">
+            <div class="p-6 border-b border-cyan-900 bg-cyan-950 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 bg-cyan-500 rounded-lg flex items-center justify-center font-bold text-lg shadow-lg">RS</div>
+                    <div><h1 class="text-lg font-bold leading-tight">SIM RS</h1><p class="text-[10px] text-cyan-400">E-Rekap v2.2</p></div>
                 </div>
+                <!-- Tombol Close di Sidebar (Mobile Only) -->
+                <button onclick="toggleSidebar()" class="md:hidden text-cyan-300 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            
+            <!-- User Profile Widget in Sidebar -->
+            <div class="px-6 py-4 border-b border-cyan-900">
                 <div class="bg-cyan-900/50 rounded-lg p-3 border border-cyan-800">
-                    <p class="text-[10px] text-cyan-300">Login Sebagai</p>
-                    <p id="userDisplay" class="text-sm font-bold truncate">User</p>
+                    <p class="text-[10px] text-cyan-300 uppercase tracking-wider mb-1">Login Sebagai</p>
+                    <p id="userDisplay" class="text-sm font-bold truncate text-white">User</p>
                     <span id="roleDisplay" class="text-[9px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded mt-1 inline-block">USER</span>
                 </div>
             </div>
-            <nav class="flex-1 overflow-y-auto py-4 space-y-1">
-                <a href="#" onclick="navTo('home')" class="nav-item active flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white"><i class="fas fa-home w-5"></i> <span class="text-sm ml-3">Beranda</span></a>
-                <a href="#" onclick="navTo('upload')" id="nav-upload" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white"><i class="fas fa-cloud-upload-alt w-5"></i> <span class="text-sm ml-3">Upload Data</span></a>
-                <a href="#" onclick="navTo('download')" id="nav-download" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white"><i class="fas fa-file-excel w-5"></i> <span class="text-sm ml-3">Download Rekap</span></a>
-                <a href="#" onclick="navTo('history')" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white"><i class="fas fa-history w-5"></i> <span class="text-sm ml-3">Riwayat</span></a>
+
+            <nav class="flex-1 overflow-y-auto py-2 space-y-1">
+                <a href="#" onclick="navTo('home')" class="nav-item active flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
+                    <i class="fas fa-home w-5 group-hover:text-cyan-400 transition"></i> <span class="text-sm ml-3">Beranda</span>
+                </a>
+                <a href="#" onclick="navTo('upload')" id="nav-upload" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
+                    <i class="fas fa-cloud-upload-alt w-5 group-hover:text-cyan-400 transition"></i> <span class="text-sm ml-3">Upload Data</span>
+                </a>
+                <a href="#" onclick="navTo('download')" id="nav-download" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
+                    <i class="fas fa-file-excel w-5 group-hover:text-cyan-400 transition"></i> <span class="text-sm ml-3">Download Rekap</span>
+                </a>
+                <a href="#" onclick="navTo('history')" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
+                    <i class="fas fa-history w-5 group-hover:text-cyan-400 transition"></i> <span class="text-sm ml-3">Riwayat</span>
+                </a>
                 
                 <!-- Admin Only Menus -->
                 <div id="adminMenu" class="hidden mt-4 pt-4 border-t border-cyan-900">
                     <p class="px-6 text-[10px] text-cyan-500 font-bold mb-2 uppercase">Administrator</p>
-                    <a href="#" onclick="navTo('files')" id="nav-files" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white"><i class="fas fa-folder-open w-5 text-purple-400"></i> <span class="text-sm ml-3">File Uploads</span></a>
-                    <a href="#" onclick="navTo('users')" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white"><i class="fas fa-users-cog w-5 text-yellow-400"></i> <span class="text-sm ml-3">Manajemen User</span></a>
+                    <a href="#" onclick="navTo('files')" id="nav-files" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
+                        <i class="fas fa-folder-open w-5 text-purple-400"></i> <span class="text-sm ml-3">File Uploads</span>
+                    </a>
+                    <a href="#" onclick="navTo('users')" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
+                        <i class="fas fa-users-cog w-5 text-yellow-400"></i> <span class="text-sm ml-3">Manajemen User</span>
+                    </a>
                 </div>
             </nav>
-            <div class="p-4 bg-cyan-950 border-t border-cyan-900"><button onclick="doLogout()" class="w-full flex items-center justify-center space-x-2 text-cyan-400 hover:text-white py-2 text-sm"><i class="fas fa-sign-out-alt"></i> <span>Keluar</span></button></div>
+            <div class="p-4 bg-cyan-950 border-t border-cyan-900"><button onclick="doLogout()" class="w-full flex items-center justify-center space-x-2 text-cyan-400 hover:text-white py-2 text-sm transition hover:bg-cyan-900 rounded"><i class="fas fa-sign-out-alt"></i> <span>Keluar</span></button></div>
         </div>
 
         <!-- MAIN CONTENT -->
-        <div class="flex-1 overflow-y-auto relative bg-slate-100">
-            <div class="bg-white shadow-sm h-16 flex items-center px-8 justify-between sticky top-0 z-10 border-b border-slate-200">
-                <h2 class="text-xl font-bold text-slate-800" id="pageTitle">Dashboard</h2>
-                <div class="text-sm text-slate-500 font-medium bg-slate-50 px-3 py-1 rounded-full border border-slate-200" id="currentDate"></div>
+        <div class="flex-1 overflow-y-auto relative bg-slate-100 flex flex-col h-full w-full">
+            <!-- Header Mobile / Topbar -->
+            <div class="bg-white shadow-sm h-16 flex items-center px-4 md:px-8 justify-between sticky top-0 z-10 border-b border-slate-200">
+                <div class="flex items-center">
+                    <!-- Tombol Hamburger (Mobile) -->
+                    <button onclick="toggleSidebar()" class="md:hidden mr-4 text-slate-600 hover:text-cyan-600 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h2 class="text-lg md:text-xl font-bold text-slate-800 truncate" id="pageTitle">Dashboard</h2>
+                </div>
+                <div class="text-xs md:text-sm text-slate-500 font-medium bg-slate-50 px-3 py-1 rounded-full border border-slate-200 hidden md:block" id="currentDate"></div>
             </div>
 
-            <div class="p-8 pb-20">
+            <div class="p-4 md:p-8 pb-20 overflow-x-hidden">
                 <!-- PAGE: HOME -->
                 <div id="page-home" class="page-content fade-in">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
                         <div class="bg-gradient-to-br from-cyan-600 to-blue-800 p-6 rounded-2xl shadow-lg text-white relative overflow-hidden">
                             <p class="text-cyan-100 text-xs uppercase font-bold mb-1">Status Akun</p>
                             <div class="flex items-center space-x-2"><div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div><p class="text-2xl font-bold">Aktif</p></div>
@@ -164,7 +199,7 @@
                             <p class="text-slate-400 text-xs uppercase font-bold mb-1">Periode Aktif</p><p class="text-lg font-bold text-slate-800" id="currentMonthDisplay">-</p>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
                         <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
                             <div class="bg-green-50/50 px-6 py-4 border-b border-green-100 flex justify-between"><h3 class="font-bold text-green-800"><i class="fas fa-check-circle mr-2"></i> Sudah Upload</h3><span id="countUploaded" class="bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">0</span></div>
                             <div class="p-6 max-h-64 overflow-y-auto custom-scroll"><ul id="listUploaded" class="space-y-3"><li class="text-center text-slate-400 text-sm">Memuat...</li></ul></div>
@@ -178,10 +213,10 @@
 
                 <!-- PAGE: UPLOAD -->
                 <div id="page-upload" class="page-content hidden fade-in">
-                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 max-w-3xl mx-auto">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-slate-200 max-w-3xl mx-auto">
                         <div class="mb-6 border-b border-slate-100 pb-4"><h3 class="text-xl font-bold text-slate-800"><i class="fas fa-cloud-upload-alt mr-2 text-cyan-600"></i>Upload Jadwal</h3></div>
                         <form id="uploadForm" class="space-y-6">
-                            <div class="grid grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div><label class="block text-xs font-bold text-slate-600 mb-2">Bulan</label><select id="uploadMonth" class="w-full border p-3 rounded-xl text-sm"><option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option><option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option><option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option><option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option></select></div>
                                 <div><label class="block text-xs font-bold text-slate-600 mb-2">Ruangan</label><select id="uploadRoom" class="w-full border p-3 rounded-xl text-sm bg-slate-100"><option value="INSTALASI ANESTESI">INSTALASI ANESTESI</option><option value="INSTALASI BEDAH SENTRAL">INSTALASI BEDAH SENTRAL</option><option value="INSTALASI FARMASI">INSTALASI FARMASI</option><option value="INSTALASI GAT">INSTALASI GAT</option><option value="INSTALASI GAWAT DARURAT">INSTALASI GAWAT DARURAT</option><option value="INSTALASI GIZI">INSTALASI GIZI</option><option value="INSTALASI HEMODIALISA">INSTALASI HEMODIALISA</option><option value="INSTALASI IGD DOKTER">INSTALASI IGD DOKTER</option><option value="INSTALASI IGD PERAWAT">INSTALASI IGD PERAWAT</option><option value="INSTALASI LABORATORIUM">INSTALASI LABORATORIUM</option><option value="INSTALASI PEMELIHARAAN LINGKUNGAN">INSTALASI PEMELIHARAAN LINGKUNGAN</option><option value="INSTALASI PEMELIHARAAN SARANA">INSTALASI PEMELIHARAAN SARANA</option><option value="INSTALASI RADIOLOGI">INSTALASI RADIOLOGI</option><option value="INSTALASI RAWAT JALAN">INSTALASI RAWAT JALAN</option><option value="INSTALASI REHAB MEDIK">INSTALASI REHAB MEDIK</option><option value="INSTALASI REKAM MEDIS">INSTALASI REKAM MEDIS</option><option value="INSTALASI SIM RS">INSTALASI SIM RS</option><option value="RUANG ANGGREK">RUANG ANGGREK</option><option value="RUANG ANYELIR">RUANG ANYELIR</option><option value="RUANG ASTER">RUANG ASTER</option><option value="RUANG BOUGENVILLE">RUANG BOUGENVILLE</option><option value="RUANG FLAMBOYAN">RUANG FLAMBOYAN</option><option value="RUANG HCU">RUANG HCU</option><option value="RUANG ICCU">RUANG ICCU</option><option value="RUANG ICU">RUANG ICU</option><option value="RUANG IDIK">RUANG IDIK</option><option value="RUANG LILY">RUANG LILY</option><option value="RUANG MAWAR">RUANG MAWAR</option><option value="RUANG TERATAI ASOKA">RUANG TERATAI ASOKA</option><option value="RUANG VK BERSALIN">RUANG VK BERSALIN</option><option value="UNIT AMBULANCE">UNIT AMBULANCE</option><option value="UNIT CSSD">UNIT CSSD</option><option value="UNIT KEUANGAN KASIR">UNIT KEUANGAN KASIR</option><option value="UNIT KLAIM">UNIT KLAIM</option><option value="UNIT LOUNDRY">UNIT LOUNDRY</option><option value="UNIT PEMULASARAN JENAZAH">UNIT PEMULASARAN JENAZAH</option><option value="UNIT PENGADUAN">UNIT PENGADUAN</option><option value="UNIT PPI">UNIT PPI</option></select></div>
                             </div>
@@ -194,35 +229,28 @@
 
                 <!-- PAGE: DOWNLOAD -->
                 <div id="page-download" class="page-content hidden fade-in">
-                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 max-w-lg mx-auto mt-10">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-slate-200 max-w-lg mx-auto mt-10">
                         <div class="text-center mb-8"><h2 class="text-xl font-bold text-slate-800">Download Rekap</h2></div>
                         <div class="mb-8"><label class="block text-xs font-bold text-slate-600 mb-2">Pilih Bulan</label><select id="dlMonth" class="w-full border border-slate-300 p-3 rounded-xl text-sm"><option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option><option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option><option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option><option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option></select></div>
-                        <button onclick="doDownload()" class="w-full bg-cyan-600 text-white py-3.5 rounded-xl font-bold hover:shadow-lg">Download File</button>
+                        <button onclick="doDownload()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3.5 rounded-xl font-bold hover:shadow-lg">Download File</button>
                     </div>
                 </div>
 
                 <!-- PAGE: HISTORY -->
                 <div id="page-history" class="page-content hidden fade-in">
                     <h2 class="text-xl font-bold text-slate-800 mb-4">Riwayat Aktivitas</h2>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"><table class="w-full text-sm text-left"><thead class="bg-slate-50 text-slate-700 border-b border-slate-200"><tr><th class="p-4">Waktu</th><th class="p-4">Aksi</th><th class="p-4">Detail</th><th class="p-4">Status</th></tr></thead><tbody id="historyTableBody" class="divide-y divide-slate-100"></tbody></table></div>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden overflow-x-auto"><table class="w-full text-sm text-left"><thead class="bg-slate-50 text-slate-700 border-b border-slate-200"><tr><th class="p-4 whitespace-nowrap">Waktu</th><th class="p-4 whitespace-nowrap">Aksi</th><th class="p-4 min-w-[200px]">Detail</th><th class="p-4 whitespace-nowrap">Status</th></tr></thead><tbody id="historyTableBody" class="divide-y divide-slate-100"></tbody></table></div>
                 </div>
 
-                <!-- PAGE: UPLOADED FILES (NEW) -->
+                <!-- PAGE: FILES (ADMIN) -->
                 <div id="page-files" class="page-content hidden fade-in">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                         <h2 class="text-xl font-bold text-slate-800">File Terupload</h2>
                         <button onclick="loadUploadedFiles()" class="text-sm bg-white border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 shadow-sm"><i class="fas fa-sync-alt mr-1"></i> Refresh</button>
                     </div>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden overflow-x-auto">
                         <table class="w-full text-sm text-left">
-                            <thead class="bg-purple-50 text-purple-900 border-b border-purple-100">
-                                <tr>
-                                    <th class="p-4 font-semibold">Waktu Upload</th>
-                                    <th class="p-4 font-semibold">Pengupload</th>
-                                    <th class="p-4 font-semibold">Nama File</th>
-                                    <th class="p-4 font-semibold">Ruangan</th>
-                                </tr>
-                            </thead>
+                            <thead class="bg-purple-50 text-purple-900 border-b border-purple-100"><tr><th class="p-4 whitespace-nowrap">Waktu</th><th class="p-4 whitespace-nowrap">Pengupload</th><th class="p-4 min-w-[150px]">File</th><th class="p-4 whitespace-nowrap">Ruangan</th></tr></thead>
                             <tbody id="filesTableBody" class="divide-y divide-slate-100"></tbody>
                         </table>
                     </div>
@@ -230,13 +258,17 @@
 
                 <!-- PAGE: USERS -->
                 <div id="page-users" class="page-content hidden fade-in">
-                    <div class="flex justify-between items-center mb-6"><h2>Manajemen User</h2><button onclick="loadUsers()" class="text-sm bg-white border px-4 py-2 rounded-lg">Refresh</button></div>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"><table class="w-full text-sm text-left"><thead class="bg-slate-800 text-white"><tr><th class="p-4">Email</th><th class="p-4">Nama</th><th class="p-4">Role</th><th class="p-4">Ruangan</th><th class="p-4">Status</th><th class="p-4 text-center">Aksi</th></tr></thead><tbody id="userTableBody"></tbody></table></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                        <h2 class="text-xl font-bold text-slate-800">Manajemen Pengguna</h2>
+                        <button onclick="loadUsers()" class="text-sm bg-white border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50 shadow-sm"><i class="fas fa-sync-alt mr-1"></i> Refresh</button>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden overflow-x-auto"><table class="w-full text-sm text-left"><thead class="bg-slate-800 text-white"><tr><th class="p-4 whitespace-nowrap">Email</th><th class="p-4 whitespace-nowrap">Nama</th><th class="p-4 whitespace-nowrap">Role</th><th class="p-4 whitespace-nowrap">Ruangan</th><th class="p-4 whitespace-nowrap">Status</th><th class="p-4 text-center whitespace-nowrap">Aksi</th></tr></thead><tbody id="userTableBody" class="divide-y divide-slate-100"></tbody></table></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Global Loading -->
     <div id="globalLoading" class="hidden fixed inset-0 bg-cyan-950/80 backdrop-blur-sm z-[100] flex flex-col items-center justify-center text-white"><div class="w-16 h-16 border-4 border-cyan-600 border-t-yellow-400 rounded-full animate-spin"></div><p class="mt-4 text-sm font-bold tracking-wider animate-pulse" id="loadingText">Memproses Data...</p></div>
 
     <script>
@@ -244,9 +276,44 @@
         let currentUser = null; let allUsersData = [];
         const today = new Date(); document.getElementById('currentDate').textContent = today.toLocaleDateString('id-ID', {weekday:'long',year:'numeric',month:'long',day:'numeric'}); document.getElementById('currentMonthDisplay').textContent = today.toLocaleDateString('id-ID', {month:'long'});
 
-        function handleCredentialResponse(r) { toggleLoader(true); fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'verify_token', credential:r.credential})}).then(res=>res.json()).then(d=>{ toggleLoader(false); if(d.status==='success') loginSuccess(d.data); else if(d.status==='new_user') showRegisterModal(d.data.email); else Swal.fire('Gagal', d.message, 'error'); }).catch(e=>{ toggleLoader(false); Swal.fire('Error', e, 'error'); }); }
+        // Mobile Sidebar Logic
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            // Toggle translate class
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full'); // Show
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full'); // Hide
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Close sidebar when menu item clicked on mobile
+        function navTo(pageId) { 
+            document.querySelectorAll('.page-content').forEach(el=>el.classList.add('hidden')); 
+            document.getElementById('page-'+pageId).classList.remove('hidden'); 
+            document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+            const navLink = document.querySelector(`a[onclick="navTo('${pageId}')"]`);
+            if(navLink) navLink.classList.add('active');
+            document.getElementById('pageTitle').textContent = pageId === 'home' ? 'Dashboard' : pageId.charAt(0).toUpperCase() + pageId.slice(1);
+            
+            // Auto close mobile sidebar
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('sidebarOverlay').classList.add('hidden');
+            }
+
+            if(pageId === 'home') loadRoomStatus(); 
+            if(pageId === 'history') loadLogs();
+            if(pageId === 'users') loadUsers();
+            if(pageId === 'files') loadUploadedFiles();
+        }
+
+        function handleCredentialResponse(r) { toggleLoader(true, "Verifikasi Akun..."); fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'verify_token', credential:r.credential})}).then(res=>res.json()).then(d=>{ toggleLoader(false); if(d.status==='success') loginSuccess(d.data); else if(d.status==='new_user') showRegisterModal(d.data.email); else Swal.fire('Gagal Login', d.message, 'error'); }).catch(e=>{ toggleLoader(false); Swal.fire('Error', "Koneksi Bermasalah: " + e, 'error'); }); }
         function showRegisterModal(email) { document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-register').classList.remove('hidden'); document.getElementById('regEmail').value = email; }
-        document.getElementById('registerForm').addEventListener('submit', function(e) { e.preventDefault(); toggleLoader(true); const p={action:'register', email:document.getElementById('regEmail').value, nama:document.getElementById('regNama').value, ruangan:document.getElementById('regRuangan').value, hp:document.getElementById('regHP').value}; fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify(p)}).then(res=>res.json()).then(d=>{ toggleLoader(false); if(d.status==='success'){Swal.fire({title:'Berhasil!', text:'Login kembali.', icon:'success'}).then(()=>location.reload());} else Swal.fire('Gagal', d.message, 'error'); }); });
+        document.getElementById('registerForm').addEventListener('submit', function(e) { e.preventDefault(); toggleLoader(true, "Mendaftarkan Akun..."); const p={action:'register', email:document.getElementById('regEmail').value, nama:document.getElementById('regNama').value, ruangan:document.getElementById('regRuangan').value, hp:document.getElementById('regHP').value}; fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify(p)}).then(res=>res.json()).then(d=>{ toggleLoader(false); if(d.status==='success'){Swal.fire({title:'Berhasil!', text:'Login kembali.', icon:'success'}).then(()=>location.reload());} else Swal.fire('Gagal', d.message, 'error'); }); });
 
         function loginSuccess(user) {
             currentUser = user;
@@ -265,24 +332,11 @@
             const upRoom = document.getElementById('uploadRoom');
             if(!isAdmin) { upRoom.value = user.ruangan; upRoom.disabled = true; } else upRoom.disabled = false;
             if(!hasPerm(user, 'download')) document.getElementById('nav-download').classList.add('hidden');
-            
-            // Toggle menu visibility based on permissions
             if(!isAdmin) document.querySelector('a[onclick="navTo(\'users\')"]').classList.add('hidden');
             if(!hasPerm(user, 'view_files') && !isAdmin) document.querySelector('a[onclick="navTo(\'files\')"]').classList.add('hidden');
         }
         function hasPerm(u, p) { if(!u.permissions) return false; return u.permissions.includes('ALL') || u.permissions.includes(p); }
         function doLogout() { Swal.fire({title:'Logout?', icon:'warning', showCancelButton:true, confirmButtonColor:'#d33', confirmButtonText:'Ya'}).then((r)=>{if(r.isConfirmed){currentUser=null;location.reload();}}); }
-        function navTo(pageId) { 
-            document.querySelectorAll('.page-content').forEach(el=>el.classList.add('hidden')); 
-            document.getElementById('page-'+pageId).classList.remove('hidden'); 
-            document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
-            const navLink = document.querySelector(`a[onclick="navTo('${pageId}')"]`);
-            if(navLink) navLink.classList.add('active');
-            if(pageId === 'home') loadRoomStatus(); 
-            if(pageId === 'history') loadLogs();
-            if(pageId === 'users') loadUsers();
-            if(pageId === 'files') loadUploadedFiles();
-        }
         function toggleLoader(show, text="Memproses...") { const l=document.getElementById('globalLoading'); l.classList.toggle('hidden', !show); if(show) document.getElementById('loadingText').textContent=text; }
 
         function loadRoomStatus() {
@@ -302,36 +356,11 @@
             });
         }
 
-        // --- NEW: UPLOADED FILES ---
         function loadUploadedFiles() {
-            const tbody = document.getElementById('filesTableBody');
-            tbody.innerHTML = '<tr><td colspan="4" class="text-center p-8 text-slate-400"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat daftar file...</td></tr>';
-            
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'get_uploaded_files', userEmail: currentUser.email })
-            })
-            .then(res => res.json())
-            .then(data => {
-                tbody.innerHTML = '';
-                if (data.status === 'success') {
-                    if (data.data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="4" class="text-center p-8 text-slate-400 italic">Belum ada file yang diupload.</td></tr>';
-                    } else {
-                        data.data.forEach(file => {
-                            let date = new Date(file.time).toLocaleString();
-                            tbody.innerHTML += `
-                                <tr class="border-b hover:bg-slate-50 transition">
-                                    <td class="p-4 text-slate-500 text-xs">${date}</td>
-                                    <td class="p-4 text-xs font-medium text-slate-700">${file.uploader}</td>
-                                    <td class="p-4 text-xs text-purple-700 font-bold"><i class="fas fa-file-excel mr-2"></i>${file.fileName}</td>
-                                    <td class="p-4 text-xs text-slate-600 bg-slate-50">${file.room}</td>
-                                </tr>`;
-                        });
-                    }
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-rose-500">${data.message}</td></tr>`;
-                }
+            const tbody = document.getElementById('filesTableBody'); tbody.innerHTML='<tr><td colspan="4" class="text-center p-8 text-slate-400"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat...</td></tr>';
+            fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'get_uploaded_files', userEmail:currentUser.email})}).then(r=>r.json()).then(d=>{
+                tbody.innerHTML=''; if(d.status==='success'){ if(d.data.length===0) tbody.innerHTML='<tr><td colspan="4" class="text-center p-4">Kosong</td></tr>';
+                d.data.forEach(f=>{ tbody.innerHTML+=`<tr class="border-b hover:bg-slate-50 transition"><td class="p-4 text-slate-500 text-xs">${new Date(f.time).toLocaleString()}</td><td class="p-4 text-xs font-medium text-slate-700">${f.uploader}</td><td class="p-4 text-xs text-purple-700 font-bold"><i class="fas fa-file-excel mr-2"></i>${f.fileName}</td><td class="p-4 text-xs text-slate-600">${f.room}</td></tr>`; }); } else tbody.innerHTML=`<tr><td colspan="4" class="text-center text-red-500">${d.message}</td></tr>`;
             });
         }
 
