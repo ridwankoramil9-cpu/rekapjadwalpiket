@@ -4,256 +4,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Manajemen RS</title>
-    <!-- Tailwind & Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
-        /* Animasi Fade In Dasar */
         .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Sidebar Active State */
         .nav-item.active { background-color: #1E40AF; border-right: 4px solid #60A5FA; }
-        
-        /* Custom Scrollbar */
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* --- ANIMATED BACKGROUND (Alternatif Particles) --- */
-        /* Efek gradasi bergerak yang halus dan profesional */
-        .animated-bg {
-            background: linear-gradient(-45deg, #1e3a8a, #2563eb, #3b82f6, #60a5fa);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Glassmorphism Effect untuk Card Login */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+        .animated-bg { background: linear-gradient(-45deg, #1e3a8a, #2563eb, #3b82f6, #60a5fa); background-size: 400% 400%; animation: gradientBG 15s ease infinite; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
     </style>
 </head>
 <body class="bg-gray-100 font-sans h-screen overflow-hidden flex">
 
-    <!-- ================= VIEW: LOGIN ================= -->
-    <!-- Menggunakan Animated Gradient Background -->
+    <!-- VIEW: LOGIN -->
     <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center animated-bg">
         <div class="glass-card p-10 rounded-2xl shadow-2xl w-96 text-center fade-in border-t-4 border-blue-400">
-            <div class="mb-6 inline-block p-4 rounded-full bg-blue-50">
-                <i class="fas fa-hospital-alt text-5xl text-blue-600"></i>
-            </div>
+            <div class="mb-6 inline-block p-4 rounded-full bg-blue-50"><i class="fas fa-hospital-alt text-5xl text-blue-600"></i></div>
             <h2 class="text-3xl font-bold text-gray-800 mb-2">E-Rekap RS</h2>
             <p class="text-gray-500 text-sm mb-8">Sistem Informasi Manajemen Jadwal</p>
-            
             <div class="flex justify-center">
-                <div id="g_id_onload"
-                     data-client_id="783459415718-mp0vsmd2lopajf2ut0aqc6drjrs95pu8.apps.googleusercontent.com" 
-                     data-callback="handleCredentialResponse"
-                     data-auto_prompt="false">
-                </div>
+                <div id="g_id_onload" data-client_id="783459415718-mp0vsmd2lopajf2ut0aqc6drjrs95pu8.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
                 <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="pill" data-logo_alignment="left"></div>
             </div>
-            
             <p id="loginStatus" class="mt-6 text-xs text-red-500 font-semibold"></p>
-            
-            <div class="mt-8 text-[10px] text-gray-400">
-                &copy; 2024 RS Management System v2.0
-            </div>
         </div>
     </div>
 
-    <!-- ================= VIEW: REGISTER ================= -->
+    <!-- VIEW: REGISTER -->
     <div id="view-register" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
         <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md fade-in border border-gray-200">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Selamat Datang!</h2>
-                <p class="text-sm text-gray-500">Lengkapi data diri Anda untuk melanjutkan</p>
-            </div>
+            <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Selamat Datang!</h2>
             <form id="registerForm" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Email Akun</label>
-                    <input type="text" id="regEmail" disabled class="w-full bg-blue-50 border border-blue-100 p-2.5 rounded text-sm text-blue-800 font-medium">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Nama Lengkap</label>
-                    <input type="text" id="regNama" required class="w-full border border-gray-300 p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Unit / Ruangan</label>
-                    <select id="regRuangan" required class="w-full border border-gray-300 p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none transition bg-white">
+                <div><label class="block text-xs font-bold text-gray-600 mb-1">Email</label><input type="text" id="regEmail" disabled class="w-full bg-blue-50 border p-2.5 rounded text-sm"></div>
+                <div><label class="block text-xs font-bold text-gray-600 mb-1">Nama Lengkap</label><input type="text" id="regNama" required class="w-full border p-2.5 rounded text-sm"></div>
+                <div><label class="block text-xs font-bold text-gray-600 mb-1">Unit / Ruangan</label>
+                    <select id="regRuangan" required class="w-full border p-2.5 rounded text-sm bg-white">
                         <option value="">-- Pilih Ruangan --</option>
-                        <option value="Ruang HD">Ruang HD</option>
-                        <option value="Ruang ICCU">Ruang ICCU</option>
-                        <option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option>
-                        <option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option>
-                        <option value="Ruang UGD">Ruang UGD</option>
-                        <option value="Ruang Operasi">Ruang Operasi</option>
-                        <option value="Ruang Bersalin">Ruang Bersalin</option>
-                        <option value="Poli Rawat Jalan">Poli Rawat Jalan</option>
+                        <option value="Ruang HD">Ruang HD</option><option value="Ruang ICCU">Ruang ICCU</option><option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option><option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option><option value="Ruang UGD">Ruang UGD</option><option value="Ruang Operasi">Ruang Operasi</option><option value="Ruang Bersalin">Ruang Bersalin</option><option value="Poli Rawat Jalan">Poli Rawat Jalan</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">No. WhatsApp</label>
-                    <input type="text" id="regHP" required class="w-full border border-gray-300 p-2.5 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Contoh: 08123456789">
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 rounded-lg font-bold hover:shadow-lg transition transform hover:-translate-y-0.5">Simpan & Masuk</button>
+                <div><label class="block text-xs font-bold text-gray-600 mb-1">No. WhatsApp</label><input type="text" id="regHP" required class="w-full border p-2.5 rounded text-sm"></div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold">Simpan & Masuk</button>
             </form>
         </div>
     </div>
 
-    <!-- ================= VIEW: EDIT USER (ADMIN) ================= -->
+    <!-- VIEW: EDIT USER -->
     <div id="view-edit-user" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm overflow-y-auto py-10">
         <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg fade-in my-auto border border-gray-200">
             <div class="flex justify-between items-center mb-5 border-b pb-3">
-                <div>
-                    <h2 class="text-lg font-bold text-gray-800">Edit User</h2>
-                    <p class="text-xs text-gray-500">Kelola profil dan hak akses pengguna</p>
-                </div>
-                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition"><i class="fas fa-times"></i></button>
+                <h2 class="text-lg font-bold text-gray-800">Edit User</h2>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
             </div>
             <form id="editUserForm" class="space-y-4">
                 <input type="hidden" id="editEmailHidden">
-                
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">Email</label>
-                        <input type="text" id="editEmail" disabled class="w-full bg-gray-100 border p-2 rounded text-xs text-gray-600">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">Role Sistem</label>
-                        <select id="editRole" class="w-full border p-2 rounded text-xs bg-white focus:ring-2 focus:ring-blue-500 outline-none">
-                            <option value="USER">User Biasa</option>
-                            <option value="ADMIN">Admin Unit</option>
-                        </select>
-                    </div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Email</label><input type="text" id="editEmail" disabled class="w-full bg-gray-100 border p-2 rounded text-xs"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Role</label><select id="editRole" class="w-full border p-2 rounded text-xs bg-white"><option value="USER">User Biasa</option><option value="ADMIN">Admin Unit</option></select></div>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">Nama Lengkap</label>
-                        <input type="text" id="editNama" class="w-full border p-2 rounded text-xs focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">Ruangan</label>
-                        <select id="editRuangan" class="w-full border p-2 rounded text-xs focus:ring-2 focus:ring-blue-500 outline-none">
-                            <option value="Ruang HD">Ruang HD</option>
-                            <option value="Ruang ICCU">Ruang ICCU</option>
-                            <option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option>
-                            <option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option>
-                            <option value="Ruang UGD">Ruang UGD</option>
-                            <option value="Ruang Operasi">Ruang Operasi</option>
-                            <option value="Ruang Bersalin">Ruang Bersalin</option>
-                            <option value="Poli Rawat Jalan">Poli Rawat Jalan</option>
-                        </select>
-                    </div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Nama</label><input type="text" id="editNama" class="w-full border p-2 rounded text-xs"></div>
+                    <div><label class="block text-xs font-bold text-gray-600 mb-1">Ruangan</label><select id="editRuangan" class="w-full border p-2 rounded text-xs"><option value="Ruang HD">Ruang HD</option><option value="Ruang ICCU">Ruang ICCU</option><option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option><option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option><option value="Ruang UGD">Ruang UGD</option><option value="Ruang Operasi">Ruang Operasi</option><option value="Ruang Bersalin">Ruang Bersalin</option><option value="Poli Rawat Jalan">Poli Rawat Jalan</option></select></div>
                 </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">Status Akun</label>
-                    <select id="editStatus" class="w-full border p-2 rounded text-xs font-bold focus:ring-2 focus:ring-blue-500 outline-none">
-                        <option value="ACTIVE" class="text-green-600 font-bold">ACTIVE (Diizinkan Login)</option>
-                        <option value="BLOCKED" class="text-red-600 font-bold">BLOCKED (Dibekukan)</option>
-                    </select>
-                </div>
-
-                <!-- PERMISSION CHECKBOXES -->
+                <div><label class="block text-xs font-bold text-gray-600 mb-1">Status</label><select id="editStatus" class="w-full border p-2 rounded text-xs font-bold"><option value="ACTIVE" class="text-green-600">ACTIVE</option><option value="BLOCKED" class="text-red-600">BLOCKED</option></select></div>
                 <div class="border rounded-lg p-4 bg-gray-50">
-                    <p class="text-xs font-bold text-gray-700 mb-3 border-b border-gray-200 pb-2">Hak Akses Fitur:</p>
+                    <p class="text-xs font-bold text-gray-700 mb-3 border-b pb-2">Hak Akses:</p>
                     <div class="grid grid-cols-2 gap-3 text-xs">
-                        <label class="flex items-center space-x-2 cursor-pointer hover:bg-white p-1 rounded transition">
-                            <input type="checkbox" class="perm-check text-blue-600 rounded focus:ring-blue-500" value="upload"> <span>Upload Data</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer hover:bg-white p-1 rounded transition">
-                            <input type="checkbox" class="perm-check text-blue-600 rounded focus:ring-blue-500" value="download"> <span>Download Data</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer hover:bg-white p-1 rounded transition">
-                            <input type="checkbox" class="perm-check text-blue-600 rounded focus:ring-blue-500" value="history_own"> <span>History Pribadi</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer hover:bg-white p-1 rounded transition">
-                            <input type="checkbox" class="perm-check text-blue-600 rounded focus:ring-blue-500" value="history_all"> <span class="text-blue-600 font-semibold">Lihat Semua History</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer col-span-2 mt-2 pt-2 border-t border-gray-200 hover:bg-red-50 p-1 rounded transition">
-                            <input type="checkbox" class="perm-check text-red-600 rounded focus:ring-red-500" value="manage_users"> <span class="text-red-600 font-bold">Manajemen User (Admin Area)</span>
-                        </label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" class="perm-check" value="upload"> <span>Upload</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" class="perm-check" value="download"> <span>Download</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" class="perm-check" value="history_own"> <span>History Sendiri</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" class="perm-check" value="history_all"> <span>Semua History</span></label>
+                        <label class="flex items-center space-x-2 col-span-2 border-t pt-2"><input type="checkbox" class="perm-check text-red-600" value="manage_users"> <span class="text-red-600 font-bold">Manajemen User</span></label>
                     </div>
                 </div>
-
                 <div class="pt-2 flex space-x-3">
-                    <button type="button" onclick="closeEditModal()" class="w-1/3 bg-gray-200 text-gray-700 py-2 rounded font-bold hover:bg-gray-300 text-sm transition">Batal</button>
-                    <button type="submit" class="w-2/3 bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700 text-sm shadow-md transition">Simpan Perubahan</button>
+                    <button type="button" onclick="closeEditModal()" class="w-1/3 bg-gray-200 text-gray-700 py-2 rounded font-bold text-sm">Batal</button>
+                    <button type="submit" class="w-2/3 bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700 text-sm">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ================= VIEW: DASHBOARD ================= -->
+    <!-- VIEW: DASHBOARD -->
     <div id="view-dashboard" class="hidden flex w-full h-full bg-gray-100">
-        
-        <!-- SIDEBAR -->
         <div class="w-64 bg-blue-900 text-white flex flex-col shadow-2xl z-20">
             <div class="p-6 border-b border-blue-800 bg-blue-900">
                 <div class="flex items-center space-x-3 mb-4">
                     <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-900 font-bold text-lg shadow">RS</div>
-                    <div>
-                        <h1 class="text-lg font-bold leading-tight">SIM RS</h1>
-                        <p class="text-[10px] text-blue-300">E-Rekap Jadwal v2.0</p>
-                    </div>
+                    <div><h1 class="text-lg font-bold leading-tight">SIM RS</h1><p class="text-[10px] text-blue-300">E-Rekap v2.0</p></div>
                 </div>
                 <div class="bg-blue-800 rounded-lg p-3">
-                    <p class="text-[10px] text-blue-300 uppercase tracking-wider mb-1">Login Sebagai</p>
+                    <p class="text-[10px] text-blue-300 uppercase">Login Sebagai</p>
                     <p id="userDisplay" class="text-sm font-bold truncate">User</p>
                     <span id="roleDisplay" class="text-[9px] bg-blue-500/30 border border-blue-400/30 px-2 py-0.5 rounded text-blue-100 mt-1 inline-block">USER</span>
                 </div>
             </div>
-            
             <nav class="flex-1 overflow-y-auto py-4 space-y-1">
-                <a href="#" onclick="navTo('home')" class="nav-item active flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent">
-                    <i class="fas fa-home w-5 opacity-70"></i> <span class="text-sm ml-3">Beranda</span>
-                </a>
-                <a href="#" onclick="navTo('upload')" id="nav-upload" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent">
-                    <i class="fas fa-cloud-upload-alt w-5 opacity-70"></i> <span class="text-sm ml-3">Upload Data</span>
-                </a>
-                <a href="#" onclick="navTo('download')" id="nav-download" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent">
-                    <i class="fas fa-file-excel w-5 opacity-70"></i> <span class="text-sm ml-3">Download Rekap</span>
-                </a>
-                <a href="#" onclick="navTo('history')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent">
-                    <i class="fas fa-history w-5 opacity-70"></i> <span class="text-sm ml-3">Riwayat</span>
-                </a>
-                
-                <!-- Admin Menu -->
+                <a href="#" onclick="navTo('home')" class="nav-item active flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent"><i class="fas fa-home w-5 opacity-70"></i> <span class="text-sm ml-3">Beranda</span></a>
+                <a href="#" onclick="navTo('upload')" id="nav-upload" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent"><i class="fas fa-cloud-upload-alt w-5 opacity-70"></i> <span class="text-sm ml-3">Upload Data</span></a>
+                <a href="#" onclick="navTo('download')" id="nav-download" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent"><i class="fas fa-file-excel w-5 opacity-70"></i> <span class="text-sm ml-3">Download Rekap</span></a>
+                <a href="#" onclick="navTo('history')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent"><i class="fas fa-history w-5 opacity-70"></i> <span class="text-sm ml-3">Riwayat</span></a>
                 <div id="adminMenu" class="hidden mt-6 pt-6 border-t border-blue-800">
-                    <p class="px-6 text-[10px] text-blue-400 font-bold mb-2 uppercase tracking-widest">Administrator</p>
-                    <a href="#" onclick="navTo('users')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent">
-                        <i class="fas fa-users-cog w-5 opacity-70"></i> <span class="text-sm ml-3">Manajemen User</span>
-                    </a>
+                    <p class="px-6 text-[10px] text-blue-400 font-bold mb-2 uppercase">Administrator</p>
+                    <a href="#" onclick="navTo('users')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-800 transition border-l-4 border-transparent"><i class="fas fa-users-cog w-5 opacity-70"></i> <span class="text-sm ml-3">Manajemen User</span></a>
                 </div>
             </nav>
-
-            <div class="p-4 bg-blue-950 border-t border-blue-900">
-                <button onclick="doLogout()" class="w-full flex items-center justify-center space-x-2 text-red-300 hover:text-white hover:bg-red-900/50 py-2 rounded transition text-sm">
-                    <i class="fas fa-sign-out-alt"></i> <span>Keluar</span>
-                </button>
-            </div>
+            <div class="p-4 bg-blue-950 border-t border-blue-900"><button onclick="doLogout()" class="w-full flex items-center justify-center space-x-2 text-red-300 hover:text-white py-2 rounded transition text-sm"><i class="fas fa-sign-out-alt"></i> <span>Keluar</span></button></div>
         </div>
 
-        <!-- MAIN CONTENT -->
         <div class="flex-1 overflow-y-auto relative">
-            <!-- Header Mobile / Topbar (Optional, for now simplistic) -->
             <div class="bg-white shadow-sm h-16 flex items-center px-8 justify-between sticky top-0 z-10">
                 <h2 class="text-xl font-bold text-gray-800" id="pageTitle">Dashboard</h2>
                 <div class="text-sm text-gray-500" id="currentDate"></div>
@@ -261,126 +128,73 @@
 
             <div class="p-8 pb-20">
                 
-                <!-- PAGE: HOME -->
+                <!-- PAGE: HOME (DASHBOARD STATS) -->
                 <div id="page-home" class="page-content fade-in">
+                    <!-- Stats User -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <div class="bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-xl shadow-lg text-white">
                             <p class="text-blue-100 text-xs uppercase font-bold mb-1">Status Akun</p>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                                <p class="text-2xl font-bold">Aktif</p>
-                            </div>
+                            <div class="flex items-center space-x-2"><div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div><p class="text-2xl font-bold">Aktif</p></div>
                         </div>
                         <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <p class="text-gray-400 text-xs uppercase font-bold mb-1">Ruangan Anda</p>
-                                    <p class="text-xl font-bold text-gray-800 truncate w-48" id="dashRoom">-</p>
-                                </div>
-                                <div class="bg-blue-50 p-3 rounded-full text-blue-600"><i class="fas fa-building"></i></div>
-                            </div>
+                            <p class="text-gray-400 text-xs uppercase font-bold mb-1">Ruangan Anda</p>
+                            <p class="text-xl font-bold text-gray-800 truncate w-48" id="dashRoom">-</p>
                         </div>
                         <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <p class="text-gray-400 text-xs uppercase font-bold mb-1">Akses Sistem</p>
-                                    <p class="text-xl font-bold text-gray-800">Terverifikasi</p>
-                                </div>
-                                <div class="bg-green-50 p-3 rounded-full text-green-600"><i class="fas fa-shield-alt"></i></div>
-                            </div>
+                            <p class="text-gray-400 text-xs uppercase font-bold mb-1">Bulan Ini</p>
+                            <p class="text-xl font-bold text-gray-800" id="currentMonthDisplay">-</p>
                         </div>
                     </div>
-                    
-                    <div class="bg-white rounded-xl shadow-lg p-8 text-center border border-gray-100">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3063/3063823.png" class="w-32 mx-auto mb-4 opacity-80" alt="Hospital">
-                        <h3 class="text-lg font-bold text-gray-700">Selamat Datang di Sistem E-Rekap</h3>
-                        <p class="text-gray-500 text-sm max-w-md mx-auto mt-2">Silakan gunakan menu di sebelah kiri untuk mengupload jadwal, mendownload rekap, atau melihat riwayat aktivitas Anda.</p>
+
+                    <!-- MONITORING STATUS UPLOAD RUANGAN (NEW FEATURE) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <!-- Card: Sudah Upload -->
+                        <div class="bg-white rounded-xl shadow-lg border border-green-100 overflow-hidden">
+                            <div class="bg-green-50 px-6 py-4 border-b border-green-100 flex justify-between items-center">
+                                <h3 class="font-bold text-green-800 flex items-center"><i class="fas fa-check-circle mr-2"></i> Sudah Upload (Bulan Ini)</h3>
+                                <span id="countUploaded" class="bg-green-200 text-green-800 text-xs font-bold px-2 py-1 rounded-full">0</span>
+                            </div>
+                            <div class="p-6 max-h-64 overflow-y-auto custom-scroll">
+                                <ul id="listUploaded" class="space-y-3">
+                                    <li class="text-center text-gray-400 text-sm italic">Memuat data...</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card: Belum Upload -->
+                        <div class="bg-white rounded-xl shadow-lg border border-red-100 overflow-hidden">
+                            <div class="bg-red-50 px-6 py-4 border-b border-red-100 flex justify-between items-center">
+                                <h3 class="font-bold text-red-800 flex items-center"><i class="fas fa-times-circle mr-2"></i> Belum Upload</h3>
+                                <span id="countPending" class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded-full">0</span>
+                            </div>
+                            <div class="p-6 max-h-64 overflow-y-auto custom-scroll">
+                                <ul id="listPending" class="space-y-2">
+                                    <li class="text-center text-gray-400 text-sm italic">Memuat data...</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- PAGE: UPLOAD -->
                 <div id="page-upload" class="page-content hidden fade-in">
                     <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 max-w-3xl mx-auto">
-                        <div class="mb-6 border-b pb-4">
-                            <h3 class="text-lg font-bold text-gray-800"><i class="fas fa-cloud-upload-alt mr-2 text-blue-600"></i>Upload Jadwal</h3>
-                            <p class="text-gray-500 text-xs mt-1">Pastikan format file .xlsx sesuai template.</p>
-                        </div>
-                        
+                        <div class="mb-6 border-b pb-4"><h3 class="text-lg font-bold text-gray-800"><i class="fas fa-cloud-upload-alt mr-2 text-blue-600"></i>Upload Jadwal</h3></div>
                         <form id="uploadForm" class="space-y-6">
                             <div class="grid grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-700 mb-2">Bulan Laporan</label>
-                                    <div class="relative">
-                                        <select id="uploadMonth" class="w-full border border-gray-300 p-3 rounded-lg text-sm appearance-none focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50">
-                                            <option value="Januari">Januari</option>
-                                            <option value="Februari">Februari</option>
-                                            <option value="Maret">Maret</option>
-                                            <option value="April">April</option>
-                                            <option value="Mei">Mei</option>
-                                            <option value="Juni">Juni</option>
-                                            <option value="Juli">Juli</option>
-                                            <option value="Agustus">Agustus</option>
-                                            <option value="September">September</option>
-                                            <option value="Oktober">Oktober</option>
-                                            <option value="November">November</option>
-                                            <option value="Desember">Desember</option>
-                                        </select>
-                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"><i class="fas fa-chevron-down text-xs"></i></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-700 mb-2">Ruangan</label>
-                                    <div class="relative">
-                                        <select id="uploadRoom" class="w-full border border-gray-300 p-3 rounded-lg text-sm appearance-none bg-gray-100 focus:ring-2 focus:ring-blue-500 outline-none">
-                                            <option value="Ruang HD">Ruang HD</option>
-                                            <option value="Ruang ICCU">Ruang ICCU</option>
-                                            <option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option>
-                                            <option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option>
-                                            <option value="Ruang UGD">Ruang UGD</option>
-                                            <option value="Ruang Operasi">Ruang Operasi</option>
-                                            <option value="Ruang Bersalin">Ruang Bersalin</option>
-                                            <option value="Poli Rawat Jalan">Poli Rawat Jalan</option>
-                                        </select>
-                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"><i class="fas fa-lock text-xs"></i></div>
-                                    </div>
-                                </div>
+                                <div><label class="block text-xs font-bold text-gray-700 mb-2">Bulan</label><select id="uploadMonth" class="w-full border p-3 rounded-lg text-sm bg-gray-50"><option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option><option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option><option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option><option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option></select></div>
+                                <div><label class="block text-xs font-bold text-gray-700 mb-2">Ruangan</label><select id="uploadRoom" class="w-full border p-3 rounded-lg text-sm bg-gray-100"><option value="Ruang HD">Ruang HD</option><option value="Ruang ICCU">Ruang ICCU</option><option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option><option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option><option value="Ruang UGD">Ruang UGD</option><option value="Ruang Operasi">Ruang Operasi</option><option value="Ruang Bersalin">Ruang Bersalin</option><option value="Poli Rawat Jalan">Poli Rawat Jalan</option></select></div>
                             </div>
-                            
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 mb-2">File Jadwal (.xlsx)</label>
-                                <div class="relative group">
-                                    <input type="file" id="fileInput" multiple accept=".xlsx" class="hidden">
-                                    <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-blue-300 rounded-xl cursor-pointer bg-blue-50/50 hover:bg-blue-50 transition">
-                                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition">
-                                            <i class="fas fa-folder-plus text-2xl text-blue-500"></i>
-                                        </div>
-                                        <span class="text-sm font-medium text-gray-600">Klik untuk pilih file</span>
-                                        <span class="text-xs text-gray-400 mt-1">Bisa pilih banyak file sekaligus</span>
-                                    </label>
-                                </div>
-                                <!-- File Preview List -->
-                                <div id="fileListContainer" class="hidden mt-3 bg-gray-50 rounded-lg p-3 border border-gray-200">
-                                    <p class="text-xs font-bold text-gray-600 mb-2 flex items-center"><i class="fas fa-list mr-2"></i> File yang akan diupload:</p>
-                                    <ul id="selectedFilesList" class="space-y-1 max-h-24 overflow-y-auto custom-scroll text-xs text-gray-600 ml-1"></ul>
-                                </div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">File .xlsx</label>
+                                <input type="file" id="fileInput" multiple accept=".xlsx" class="w-full border p-2 rounded text-sm">
+                                <div id="fileListContainer" class="hidden mt-3 bg-gray-50 rounded-lg p-3 border border-gray-200"><ul id="selectedFilesList" class="space-y-1 text-xs text-gray-600 ml-1"></ul></div>
                             </div>
-                            
-                            <!-- LOG AREA -->
                             <div id="uploadLogArea" class="hidden mt-6 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-                                <div class="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center">
-                                    <h3 class="text-xs font-bold text-gray-700">Status Proses</h3>
-                                    <span id="progressText" class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">0/0</span>
-                                </div>
-                                <div class="p-4 max-h-60 overflow-y-auto custom-scroll">
-                                    <ul id="uploadLogList" class="space-y-3"></ul>
-                                </div>
+                                <div class="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center"><h3 class="text-xs font-bold text-gray-700">Status</h3><span id="progressText" class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">0/0</span></div>
+                                <div class="p-4 max-h-60 overflow-y-auto custom-scroll"><ul id="uploadLogList" class="space-y-3"></ul></div>
                             </div>
-                            
-                            <div class="pt-2">
-                                <button type="submit" id="btnUpload" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition transform hover:-translate-y-0.5 flex justify-center items-center">
-                                    <i class="fas fa-paper-plane mr-2"></i> Mulai Upload
-                                </button>
-                            </div>
+                            <button type="submit" id="btnUpload" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition">Mulai Upload</button>
                         </form>
                     </div>
                 </div>
@@ -388,149 +202,50 @@
                 <!-- PAGE: HISTORY -->
                 <div id="page-history" class="page-content hidden fade-in">
                     <h2 class="text-xl font-bold text-gray-800 mb-4">Riwayat Aktivitas</h2>
-                    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                        <table class="w-full text-sm text-left">
-                            <thead class="bg-gray-50 text-gray-700 border-b">
-                                <tr>
-                                    <th class="p-4 font-bold">Waktu</th>
-                                    <th class="p-4 font-bold">Aksi</th>
-                                    <th class="p-4 font-bold">Detail</th>
-                                    <th class="p-4 font-bold">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="historyTableBody" class="divide-y divide-gray-100"></tbody>
-                        </table>
-                    </div>
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"><table class="w-full text-sm text-left"><thead class="bg-gray-50 text-gray-700 border-b"><tr><th class="p-4">Waktu</th><th class="p-4">Aksi</th><th class="p-4">Detail</th><th class="p-4">Status</th></tr></thead><tbody id="historyTableBody"></tbody></table></div>
                 </div>
                 
                 <!-- PAGE: DOWNLOAD -->
                 <div id="page-download" class="page-content hidden fade-in">
                     <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 max-w-lg mx-auto mt-10">
-                        <div class="text-center mb-6">
-                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-file-excel text-3xl text-green-600"></i>
-                            </div>
-                            <h2 class="text-xl font-bold text-gray-800">Download Rekapitulasi</h2>
-                            <p class="text-gray-500 text-sm">Unduh data gabungan seluruh ruangan dalam format Excel.</p>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label class="block text-xs font-bold text-gray-700 mb-2">Pilih Bulan</label>
-                            <div class="relative">
-                                <select id="dlMonth" class="w-full border border-gray-300 p-3 rounded-lg text-sm appearance-none focus:ring-2 focus:ring-green-500 outline-none">
-                                    <option value="Januari">Januari</option>
-                                    <option value="Februari">Februari</option>
-                                    <option value="Maret">Maret</option>
-                                    <option value="April">April</option>
-                                    <option value="Mei">Mei</option>
-                                    <option value="Juni">Juni</option>
-                                    <option value="Juli">Juli</option>
-                                    <option value="Agustus">Agustus</option>
-                                    <option value="September">September</option>
-                                    <option value="Oktober">Oktober</option>
-                                    <option value="November">November</option>
-                                    <option value="Desember">Desember</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"><i class="fas fa-chevron-down text-xs"></i></div>
-                            </div>
-                        </div>
-                        <button onclick="doDownload()" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 hover:shadow-lg transition transform hover:-translate-y-0.5 flex justify-center items-center">
-                            <i class="fas fa-download mr-2"></i> Download File
-                        </button>
+                        <div class="text-center mb-6"><h2 class="text-xl font-bold text-gray-800">Download Rekap</h2></div>
+                        <div class="mb-6"><label class="block text-xs font-bold text-gray-700 mb-2">Pilih Bulan</label><select id="dlMonth" class="w-full border p-3 rounded-lg text-sm"><option value="Januari">Januari</option><option value="Februari">Februari</option><option value="Maret">Maret</option><option value="April">April</option><option value="Mei">Mei</option><option value="Juni">Juni</option><option value="Juli">Juli</option><option value="Agustus">Agustus</option><option value="September">September</option><option value="Oktober">Oktober</option><option value="November">November</option><option value="Desember">Desember</option></select></div>
+                        <button onclick="doDownload()" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold">Download File</button>
                     </div>
                 </div>
 
                 <!-- PAGE: USERS -->
                 <div id="page-users" class="page-content hidden fade-in">
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-800">Manajemen Pengguna</h2>
-                            <p class="text-sm text-gray-500">Kelola akses dan data user.</p>
-                        </div>
-                        <button onclick="loadUsers()" class="text-sm bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 shadow-sm transition"><i class="fas fa-sync-alt mr-1"></i> Refresh</button>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm text-left">
-                                <thead class="bg-gray-800 text-white">
-                                    <tr>
-                                        <th class="p-4 font-semibold">Email</th>
-                                        <th class="p-4 font-semibold">Nama</th>
-                                        <th class="p-4 font-semibold">Role</th>
-                                        <th class="p-4 font-semibold">Ruangan</th>
-                                        <th class="p-4 font-semibold">Status</th>
-                                        <th class="p-4 font-semibold text-center">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="userTableBody" class="divide-y divide-gray-100"></tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <div class="flex justify-between items-center mb-6"><h2>Manajemen User</h2><button onclick="loadUsers()" class="text-sm bg-white border px-4 py-2 rounded-lg">Refresh</button></div>
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden"><table class="w-full text-sm text-left"><thead class="bg-gray-800 text-white"><tr><th class="p-4">Email</th><th class="p-4">Nama</th><th class="p-4">Role</th><th class="p-4">Ruangan</th><th class="p-4">Status</th><th class="p-4 text-center">Aksi</th></tr></thead><tbody id="userTableBody"></tbody></table></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="globalLoading" class="hidden fixed inset-0 bg-white/90 backdrop-blur-sm z-[100] flex flex-col items-center justify-center">
-        <div class="relative">
-            <div class="w-16 h-16 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <i class="fas fa-hospital text-blue-600 text-xs"></i>
-            </div>
-        </div>
-        <p class="mt-4 text-sm font-bold text-gray-700 animate-pulse" id="loadingText">Memproses Data...</p>
+    <!-- Global Loading -->
+    <div id="globalLoading" class="hidden fixed inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center">
+        <div class="w-16 h-16 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+        <p class="mt-4 text-sm font-bold text-gray-700 animate-pulse" id="loadingText">Memproses...</p>
     </div>
 
-    <!-- JAVASCRIPT -->
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5e8er60YVZ1m0r4Gn7RdkupWttdB1pyiXwD5Qdj7A1wF42abaSxy1QAvBhFI1Fone/exec';
         let currentUser = null; 
-        let allUsersData = []; // Cache data user untuk edit modal
+        let allUsersData = [];
 
         // --- SETUP TANGGAL ---
+        const today = new Date();
         const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', optionsDate);
+        document.getElementById('currentDate').textContent = today.toLocaleDateString('id-ID', optionsDate);
+        document.getElementById('currentMonthDisplay').textContent = today.toLocaleDateString('id-ID', { month: 'long' });
 
-        // --- AUTH & SETUP ---
-        function handleCredentialResponse(response) {
-            toggleLoader(true, "Verifikasi Akun...");
-            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'verify_token', credential: response.credential }) })
-            .then(res => res.json())
-            .then(data => {
-                toggleLoader(false);
-                if (data.status === 'success') loginSuccess(data.data);
-                else if (data.status === 'new_user') showRegisterModal(data.data.email);
-                else Swal.fire('Gagal Login', data.message, 'error');
-            })
-            .catch(err => { toggleLoader(false); Swal.fire('Error', "Koneksi Bermasalah: " + err, 'error'); });
-        }
-
-        function showRegisterModal(email) {
-            document.getElementById('view-login').classList.add('hidden');
-            document.getElementById('view-register').classList.remove('hidden');
-            document.getElementById('regEmail').value = email;
-        }
-
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            toggleLoader(true, "Mendaftarkan Akun...");
-            const payload = {
-                action: 'register',
-                email: document.getElementById('regEmail').value,
-                nama: document.getElementById('regNama').value,
-                ruangan: document.getElementById('regRuangan').value,
-                hp: document.getElementById('regHP').value
-            };
-            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
-            .then(res => res.json())
-            .then(data => {
-                toggleLoader(false);
-                if(data.status === 'success') {
-                    Swal.fire({title: 'Berhasil!', text: 'Silakan login kembali.', icon: 'success'}).then(() => location.reload());
-                } else Swal.fire('Gagal', data.message, 'error');
-            });
-        });
+        // --- AUTH ---
+        function handleCredentialResponse(r) { toggleLoader(true); fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'verify_token', credential:r.credential})}).then(res=>res.json()).then(d=>{ toggleLoader(false); if(d.status==='success') loginSuccess(d.data); else if(d.status==='new_user') showRegisterModal(d.data.email); else Swal.fire('Gagal', d.message, 'error'); }).catch(e=>{ toggleLoader(false); Swal.fire('Error', e, 'error'); }); }
+        
+        function showRegisterModal(email) { document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-register').classList.remove('hidden'); document.getElementById('regEmail').value = email; }
+        
+        document.getElementById('registerForm').addEventListener('submit', function(e) { e.preventDefault(); toggleLoader(true); fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'register', email:document.getElementById('regEmail').value, nama:document.getElementById('regNama').value, ruangan:document.getElementById('regRuangan').value, hp:document.getElementById('regHP').value})}).then(res=>res.json()).then(d=>{ toggleLoader(false); if(d.status==='success'){ Swal.fire('Sukses', 'Login kembali', 'success').then(()=>location.reload()); } else Swal.fire('Gagal', d.message, 'error'); }); });
 
         function loginSuccess(user) {
             currentUser = user;
@@ -547,340 +262,154 @@
             const isAdmin = user.role === 'ADMIN' || user.role === 'SUPER_ADMIN';
             if(isAdmin) document.getElementById('adminMenu').classList.remove('hidden');
             const upRoom = document.getElementById('uploadRoom');
-            if(!isAdmin) {
-                upRoom.value = user.ruangan;
-                upRoom.disabled = true;
-                // Add lock icon style if needed
-            } else {
-                upRoom.disabled = false;
-            }
-            // Permission check for download menu
-            if(!hasPerm(user, 'download')) {
-                document.getElementById('nav-download').classList.add('hidden');
-            }
+            if(!isAdmin) { upRoom.value = user.ruangan; upRoom.disabled = true; } else upRoom.disabled = false;
+            if(!hasPerm(user, 'download')) document.getElementById('nav-download').classList.add('hidden');
         }
-        
-        function hasPerm(user, perm) {
-            if(!user.permissions) return false;
-            return user.permissions.includes('ALL') || user.permissions.includes(perm);
-        }
-
-        function doLogout() {
-            Swal.fire({
-                title: 'Logout?',
-                text: "Anda akan keluar dari sesi ini.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Keluar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    currentUser = null;
-                    location.reload();
-                }
-            });
-        }
-
-        function navTo(pageId) {
-            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('page-' + pageId).classList.remove('hidden');
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
-            // Set active sidebar item (simple matching)
+        function hasPerm(u, p) { if(!u.permissions) return false; return u.permissions.includes('ALL') || u.permissions.includes(p); }
+        function doLogout() { currentUser=null; location.reload(); }
+        function navTo(pageId) { 
+            document.querySelectorAll('.page-content').forEach(el=>el.classList.add('hidden')); 
+            document.getElementById('page-'+pageId).classList.remove('hidden'); 
+            document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
             const navLink = document.querySelector(`a[onclick="navTo('${pageId}')"]`);
             if(navLink) navLink.classList.add('active');
             
-            document.getElementById('pageTitle').textContent = pageId === 'home' ? 'Dashboard' : 
-                                                              pageId === 'upload' ? 'Upload Data' :
-                                                              pageId === 'download' ? 'Download Rekap' :
-                                                              pageId === 'history' ? 'Riwayat' : 'Admin Area';
-
+            if(pageId === 'home') loadRoomStatus(); // LOAD STATUS DI HOME
             if(pageId === 'history') loadLogs();
             if(pageId === 'users') loadUsers();
         }
+        function toggleLoader(show, text="Memproses...") { const l=document.getElementById('globalLoading'); l.classList.toggle('hidden', !show); if(show) document.getElementById('loadingText').textContent=text; }
 
-        function toggleLoader(show, text = "Memproses Data...") {
-            const loader = document.getElementById('globalLoading');
-            loader.classList.toggle('hidden', !show);
-            if(show) document.getElementById('loadingText').textContent = text;
-        }
+        // --- ROOM STATUS MONITORING (NEW) ---
+        function loadRoomStatus() {
+            // Placeholder loading
+            document.getElementById('listUploaded').innerHTML = '<li class="text-center text-xs text-gray-400"><i class="fas fa-spinner fa-spin"></i> Memeriksa data...</li>';
+            document.getElementById('listPending').innerHTML = '<li class="text-center text-xs text-gray-400"><i class="fas fa-spinner fa-spin"></i> Memeriksa data...</li>';
 
-        // --- MANAJEMEN USER ---
-        function loadUsers() {
-            const tbody = document.getElementById('userTableBody');
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center p-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Mengambil data user...</td></tr>';
-            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'get_users', adminEmail: currentUser.email }) })
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'get_room_status' })
+            })
             .then(res => res.json())
             .then(data => {
-                tbody.innerHTML = '';
-                if(data.status === 'success') {
-                    allUsersData = data.data; 
-                    data.data.forEach(u => {
-                        let statusBadge = u.status === 'ACTIVE' 
-                            ? '<span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-bold">ACTIVE</span>' 
-                            : '<span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-bold">BLOCKED</span>';
-                        
-                        let actions = `<div class="flex justify-center space-x-2"><button onclick="openEditUser('${u.email}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 p-2 rounded-full transition" title="Edit/Akses"><i class="fas fa-edit"></i></button><button onclick="deleteUser('${u.email}')" class="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full transition" title="Hapus"><i class="fas fa-trash"></i></button></div>`;
-                        if(u.role === 'SUPER_ADMIN') actions = '<span class="text-gray-300 text-xs italic">Protected</span>';
-                        
-                        tbody.innerHTML += `<tr class="border-b hover:bg-gray-50 transition"><td class="p-4 text-xs font-mono text-gray-600">${u.email}</td><td class="p-4 font-bold text-gray-800 text-sm">${u.nama}</td><td class="p-4"><span class="bg-blue-50 text-blue-700 border border-blue-100 px-2 py-1 rounded text-[10px] font-bold tracking-wide">${u.role}</span></td><td class="p-4 text-xs text-gray-600">${u.ruangan}</td><td class="p-4">${statusBadge}</td><td class="p-4 text-center">${actions}</td></tr>`;
+                if (data.status === 'success') {
+                    const uploaded = data.data.uploaded;
+                    const pending = data.data.pending;
+                    
+                    document.getElementById('countUploaded').textContent = uploaded.length;
+                    document.getElementById('countPending').textContent = pending.length;
+
+                    // Render Uploaded
+                    const listUp = document.getElementById('listUploaded');
+                    listUp.innerHTML = '';
+                    if (uploaded.length === 0) listUp.innerHTML = '<li class="text-xs text-gray-400 italic text-center">Belum ada data masuk.</li>';
+                    uploaded.forEach(item => {
+                        let date = new Date(item.time).toLocaleString('id-ID', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+                        listUp.innerHTML += `
+                            <li class="flex items-center justify-between p-2 bg-green-50 rounded border border-green-100">
+                                <span class="text-xs font-bold text-green-800">${item.room}</span>
+                                <span class="text-[10px] text-green-600 bg-white px-2 py-0.5 rounded shadow-sm"><i class="fas fa-clock mr-1"></i>${date}</span>
+                            </li>`;
                     });
-                } else tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-red-500 font-bold">${data.message}</td></tr>`;
-            });
-        }
 
-        function openEditUser(email) {
-            const user = allUsersData.find(u => u.email === email);
-            if(!user) return;
-
-            document.getElementById('editEmailHidden').value = user.email;
-            document.getElementById('editEmail').value = user.email;
-            document.getElementById('editNama').value = user.nama;
-            document.getElementById('editRuangan').value = user.ruangan;
-            document.getElementById('editRole').value = user.role;
-            document.getElementById('editStatus').value = user.status;
-
-            const perms = user.permissions || [];
-            document.querySelectorAll('.perm-check').forEach(chk => {
-                chk.checked = perms.includes(chk.value) || perms.includes('ALL');
-            });
-
-            document.getElementById('view-edit-user').classList.remove('hidden');
-        }
-
-        function closeEditModal() {
-            document.getElementById('view-edit-user').classList.add('hidden');
-        }
-
-        document.getElementById('editUserForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            toggleLoader(true, 'Menyimpan Perubahan User...');
-            
-            const selectedPerms = [];
-            document.querySelectorAll('.perm-check:checked').forEach(chk => selectedPerms.push(chk.value));
-
-            const payload = {
-                action: 'update_user',
-                adminEmail: currentUser.email,
-                targetEmail: document.getElementById('editEmailHidden').value,
-                nama: document.getElementById('editNama').value,
-                ruangan: document.getElementById('editRuangan').value,
-                role: document.getElementById('editRole').value,
-                status: document.getElementById('editStatus').value,
-                permissions: selectedPerms
-            };
-
-            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
-            .then(res => res.json())
-            .then(data => {
-                toggleLoader(false);
-                closeEditModal();
-                if(data.status === 'success') {
-                    Swal.fire('Sukses', 'Data user berhasil diperbarui', 'success');
-                    loadUsers();
-                } else Swal.fire('Gagal', data.message, 'error');
-            });
-        });
-
-        function deleteUser(email) {
-            Swal.fire({
-                title: 'Hapus User?',
-                text: "Data user ini akan dihapus permanen.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Ya, Hapus!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    toggleLoader(true, 'Menghapus User...');
-                    fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'update_user', adminEmail: currentUser.email, targetEmail: email, isDelete: true }) })
-                    .then(res => res.json())
-                    .then(data => {
-                        toggleLoader(false);
-                        if(data.status === 'success') loadUsers();
-                        else Swal.fire('Gagal', data.message, 'error');
+                    // Render Pending
+                    const listPend = document.getElementById('listPending');
+                    listPend.innerHTML = '';
+                    if (pending.length === 0) listPend.innerHTML = '<li class="text-xs text-green-500 italic text-center">Semua ruangan sudah upload!</li>';
+                    pending.forEach(room => {
+                        listPend.innerHTML += `
+                            <li class="flex items-center p-2 bg-red-50 rounded border border-red-100">
+                                <i class="fas fa-exclamation-circle text-red-400 mr-2 text-xs"></i>
+                                <span class="text-xs font-semibold text-red-700">${room}</span>
+                            </li>`;
                     });
                 }
             });
         }
 
-        // --- UPLOAD ---
+        // --- UPLOAD LOGIC ---
+        document.getElementById('fileInput').addEventListener('change', function(e) { const f=e.target.files; const l=document.getElementById('selectedFilesList'); l.innerHTML=''; if(f.length>0){document.getElementById('fileListContainer').classList.remove('hidden');for(let i=0;i<f.length;i++){let li=document.createElement('li');li.textContent=f[i].name;l.appendChild(li);}}else{document.getElementById('fileListContainer').classList.add('hidden');} });
+
         document.getElementById('uploadForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const files = document.getElementById('fileInput').files;
-            if(files.length === 0) return Swal.fire('Error', 'Pilih minimal satu file!', 'error');
+            e.preventDefault(); const files = document.getElementById('fileInput').files; if(files.length===0) return Swal.fire('Error', 'Pilih file!', 'error');
+            const logList = document.getElementById('uploadLogList'); logList.innerHTML = ''; document.getElementById('uploadLogArea').classList.remove('hidden');
+            const room = document.getElementById('uploadRoom').value; const month = document.getElementById('uploadMonth').value;
+            const btn = document.getElementById('btnUpload'); btn.disabled=true; btn.classList.add('opacity-50');
 
-            // Reset UI Log
-            const logArea = document.getElementById('uploadLogArea');
-            const logList = document.getElementById('uploadLogList');
-            logList.innerHTML = '';
-            logArea.classList.remove('hidden');
-            
-            const room = document.getElementById('uploadRoom').value;
-            const month = document.getElementById('uploadMonth').value;
-            const total = files.length;
-            const btn = document.getElementById('btnUpload');
-            
-            btn.disabled = true;
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sedang Memproses...';
-
-            for(let i=0; i<total; i++) {
+            for(let i=0; i<files.length; i++) {
                 let file = files[i];
-                let prog = `${i+1}/${total}`;
+                let prog = `${i+1}/${files.length}`;
                 document.getElementById('progressText').textContent = prog;
                 
-                // Add loading item to log immediately
-                const tempId = `log-temp-${i}`;
-                const li = document.createElement('li');
-                li.id = tempId;
-                li.className = "flex items-center p-3 bg-blue-50 border border-blue-100 rounded text-blue-700";
-                li.innerHTML = `<i class="fas fa-spinner fa-spin mr-3"></i> <span class="text-xs">Mengupload <b>${file.name}</b>...</span>`;
-                logList.prepend(li); // Add to top
+                const li = document.createElement('li'); li.className="flex items-center p-3 bg-blue-50 border border-blue-100 rounded text-blue-700 text-xs"; li.innerHTML=`<i class="fas fa-spinner fa-spin mr-3"></i> Mengupload <b>${file.name}</b>...`; logList.prepend(li);
 
                 try {
                     let base64 = await toBase64(file);
-                    let res = await fetch(SCRIPT_URL, {
-                        method: 'POST', body: JSON.stringify({action: 'upload', userEmail: currentUser.email, file: base64, filename: file.name, room: room, month: month})
-                    }).then(r => r.json());
-
-                    // Remove temp loading item
-                    document.getElementById(tempId).remove();
-
-                    if(res.status === 'success') {
-                        addLogItem(file.name, 'success', res.message, res.data.updatedRows, res.data.fixedDataCount, res.data.changeLog);
-                    } else {
-                        addLogItem(file.name, 'error', res.message);
-                    }
-                } catch(e) {
-                    document.getElementById(tempId).remove();
-                    addLogItem(file.name, 'error', 'Koneksi Terputus / Timeout');
-                }
+                    let res = await fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'upload', userEmail:currentUser.email, file:base64, filename:file.name, room:room, month:month})}).then(r=>r.json());
+                    li.remove();
+                    if(res.status === 'success') addLogItem(file.name, 'success', res.message, res.data.updatedRows, res.data.fixedDataCount, res.data.changeLog);
+                    else addLogItem(file.name, 'error', res.message);
+                } catch(e) { li.remove(); addLogItem(file.name, 'error', 'Network Error'); }
             }
-            
-            btn.disabled = false;
-            btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Mulai Upload';
-            
-            Swal.fire({
-                title: 'Selesai!',
-                text: `Proses ${total} file telah selesai.`,
-                icon: 'success'
-            });
+            btn.disabled=false; btn.classList.remove('opacity-50');
+            Swal.fire('Selesai', 'Proses selesai', 'success');
+            loadRoomStatus(); // Refresh status setelah upload
         });
 
-        function toBase64(file) { return new Promise((r,j) => { let a = new FileReader(); a.readAsDataURL(file); a.onload=()=>r(a.result.split(',')[1]); a.onerror=e=>j(e); }); }
+        function toBase64(file) { return new Promise((r,j)=>{let a=new FileReader();a.readAsDataURL(file);a.onload=()=>r(a.result.split(',')[1]);a.onerror=e=>j(e);}); }
 
-        // --- LOG ITEM RENDERER ---
         function addLogItem(fileName, status, message, rows=0, fixed=0, logs=[]) {
             const list = document.getElementById('uploadLogList');
             const li = document.createElement('li');
             li.className = "flex items-start p-3 bg-white rounded shadow-sm border border-gray-100 animate-fade-in";
-            
-            let iconHtml = '', statusColor = '', detailText = '', actionButton = '';
-
-            if (status === 'success') {
-                iconHtml = '<div class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5"><i class="fas fa-check text-[10px]"></i></div>';
-                statusColor = 'text-green-700';
-                
-                let fixMsg = fixed > 0 
-                    ? `<div class="mt-1 flex items-center text-orange-600 text-[10px] bg-orange-50 px-2 py-1 rounded inline-block border border-orange-100"><i class="fas fa-wrench mr-1.5"></i> <b>${fixed}</b> data formatnya diperbaiki.</div>` 
-                    : `<div class="mt-1 flex items-center text-green-600 text-[10px] bg-green-50 px-2 py-1 rounded inline-block border border-green-100"><i class="fas fa-shield-alt mr-1.5"></i> Data Bersih & Valid</div>`;
-                
-                if (fixed > 0) {
-                    const encodedLogs = encodeURIComponent(JSON.stringify(logs));
-                    actionButton = `<button onclick="showDetailLog('${fileName}', '${encodedLogs}')" class="ml-auto text-[10px] bg-white text-gray-600 border border-gray-300 px-3 py-1.5 rounded hover:bg-gray-50 hover:text-blue-600 transition shadow-sm"><i class="fas fa-list-ul mr-1"></i> Rincian</button>`;
-                }
-                detailText = `<div class="text-xs text-gray-600">Berhasil update <b class="text-gray-800">${rows}</b> pegawai.</div>${fixMsg}`;
-            } else {
-                iconHtml = '<div class="bg-red-100 text-red-600 rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5"><i class="fas fa-times text-[10px]"></i></div>';
-                statusColor = 'text-red-700';
-                detailText = `<div class="text-xs text-red-600 mt-1 bg-red-50 p-2 rounded border border-red-100">${message}</div>`;
-            }
-            
-            li.innerHTML = `
-                ${iconHtml}
-                <div class="flex-1">
-                    <div class="flex justify-between items-start mb-1">
-                        <span class="font-bold text-xs text-gray-800 break-all pr-2" title="${fileName}">${fileName}</span>
-                        <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${status.toUpperCase()}</span>
-                    </div>
-                    ${detailText}
-                </div>
-                ${actionButton}
-            `;
-            // Add to top
+            let icon='<i class="fas fa-check text-green-600"></i>', color='text-green-700', detail=`Update ${rows} data.`, btn='';
+            if(status!=='success') { icon='<i class="fas fa-times text-red-600"></i>'; color='text-red-700'; detail=message; }
+            else if(fixed>0) { detail+=` <span class="text-orange-600">(${fixed} fix)</span>`; const enc=encodeURIComponent(JSON.stringify(logs)); btn=`<button onclick="showDetailLog('${fileName}','${enc}')" class="ml-auto text-[10px] border px-2 rounded">Rincian</button>`; }
+            li.innerHTML=`<div class="bg-gray-100 rounded-full w-6 h-6 flex items-center justify-center mr-3">${icon}</div><div class="flex-1"><div class="flex justify-between"><span class="text-xs font-bold w-32 truncate">${fileName}</span><span class="text-[9px] font-bold ${color}">${status.toUpperCase()}</span></div><p class="text-xs text-gray-500">${detail}</p></div>${btn}`;
             list.prepend(li);
         }
-
+        
         window.showDetailLog = function(name, enc) {
             let logs = JSON.parse(decodeURIComponent(enc));
-            let rows = logs.map(l => `<tr class="border-b hover:bg-gray-50 transition"><td class="p-2 text-center text-gray-500">${l.row}</td><td class="p-2 font-mono text-gray-600 font-bold">${l.nip}</td><td class="p-2 text-center text-gray-500">${l.dateIdx}</td><td class="p-2 text-red-500 text-[10px] line-through bg-red-50/50">${l.orig}</td><td class="p-2 text-green-600 font-bold text-[10px] bg-green-50/50">${l.fixed}</td><td class="p-2 text-gray-400 text-[10px] italic">${l.reason}</td></tr>`).join('');
-            
-            Swal.fire({
-                title: '🔍 Rincian Perbaikan Data',
-                html: `<div class="text-left text-xs mb-4 p-3 bg-blue-50 border border-blue-100 rounded text-blue-800"><i class="fas fa-file-excel mr-2"></i>File: <b>${name}</b><br><i class="fas fa-tools mr-2"></i>Total Perbaikan: <b>${logs.length}</b> sel data</div><div class="overflow-y-auto max-h-80 border rounded-lg shadow-inner"><table class="w-full text-xs text-left"><thead class="bg-gray-100 text-gray-700 sticky top-0 shadow-sm"><tr><th class="p-2 text-center">Baris</th><th class="p-2">NIP</th><th class="p-2 text-center">Tgl</th><th class="p-2">Asli</th><th class="p-2">Hasil</th><th class="p-2">Sebab</th></tr></thead><tbody>${rows}</tbody></table></div>`,
-                width: '700px',
-                showCloseButton: true,
-                focusConfirm: false,
-                confirmButtonText: 'Tutup'
-            });
-        };
+            let rows = logs.map(l => `<tr class="border-b"><td class="p-1">${l.row}</td><td class="p-1">${l.nip}</td><td class="p-1 line-through text-red-500">${l.orig}</td><td class="p-1 text-green-600">${l.fixed}</td></tr>`).join('');
+            Swal.fire({title:'Perbaikan Data', html:`<div class="max-h-60 overflow-auto"><table class="w-full text-xs text-left"><thead><tr><th>Baris</th><th>NIP</th><th>Asli</th><th>Hasil</th></tr></thead><tbody>${rows}</tbody></table></div>`});
+        }
 
-        // --- DOWNLOAD ---
         function doDownload() {
-            const month = document.getElementById('dlMonth').value;
-            toggleLoader(true, 'Sedang Menyiapkan File...');
-            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'download', userEmail: currentUser.email, month: month }) })
-            .then(res => res.json())
-            .then(data => {
-                toggleLoader(false);
-                if(data.status === 'success') {
-                    const a = document.createElement('a'); a.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'+data.data.file; a.download = data.data.filename; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-                    Swal.fire('Sukses', 'File berhasil didownload.', 'success');
-                } else Swal.fire('Gagal', data.message, 'error');
+            const month = document.getElementById('dlMonth').value; toggleLoader(true);
+            fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'download', userEmail:currentUser.email, month:month})}).then(r=>r.json()).then(d=>{
+                toggleLoader(false); if(d.status==='success'){ const a=document.createElement('a'); a.href='data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'+d.data.file; a.download=d.data.filename; document.body.appendChild(a); a.click(); a.remove(); Swal.fire('Sukses','Downloaded','success'); } else Swal.fire('Gagal',d.message,'error');
             });
         }
 
-        // --- HISTORY ---
-        function loadLogs() {
-            const tbody = document.getElementById('historyTableBody');
-            tbody.innerHTML = '<tr><td colspan="4" class="text-center p-8 text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat histori...</td></tr>';
-            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'get_logs', userEmail: currentUser.email }) })
-            .then(res => res.json())
-            .then(data => {
-                tbody.innerHTML = '';
-                if(data.status === 'success') {
-                    data.data.forEach(log => {
-                        let date = new Date(log.time).toLocaleString();
-                        let statusBadge = log.status === 'SUKSES' 
-                            ? '<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-bold">SUKSES</span>' 
-                            : '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-[10px] font-bold">GAGAL</span>';
-                        tbody.innerHTML += `<tr class="border-b hover:bg-gray-50 transition"><td class="p-4 text-gray-500 text-xs">${date}</td><td class="p-4 font-bold text-xs text-gray-700">${log.action}</td><td class="p-4 text-xs text-gray-600">${log.detail}</td><td class="p-4">${statusBadge}</td></tr>`;
-                    });
-                }
+        // --- ADMIN FUNCTIONS (Users & Edit) ---
+        function loadUsers() {
+            const t = document.getElementById('userTableBody'); t.innerHTML='<tr><td colspan="6" class="text-center p-4">Loading...</td></tr>';
+            fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'get_users', adminEmail:currentUser.email})}).then(r=>r.json()).then(d=>{
+                t.innerHTML=''; if(d.status==='success'){ allUsersData=d.data; d.data.forEach(u=>{
+                    let badge=u.status==='ACTIVE'?'<span class="bg-green-100 text-green-800 text-[10px] px-2 rounded">ACTIVE</span>':'<span class="bg-red-100 text-red-800 text-[10px] px-2 rounded">BLOCKED</span>';
+                    let act=`<button onclick="openEditUser('${u.email}')" class="text-blue-600 mr-2"><i class="fas fa-edit"></i></button><button onclick="deleteUser('${u.email}')" class="text-red-600"><i class="fas fa-trash"></i></button>`;
+                    if(u.role==='SUPER_ADMIN') act='-';
+                    t.innerHTML+=`<tr class="border-b hover:bg-gray-50"><td class="p-3 text-xs">${u.email}</td><td class="p-3 font-bold text-xs">${u.nama}</td><td class="p-3 text-xs">${u.role}</td><td class="p-3 text-xs">${u.ruangan}</td><td class="p-3">${badge}</td><td class="p-3 text-center">${act}</td></tr>`;
+                }); } else t.innerHTML=`<tr><td colspan="6" class="text-center text-red-500">${d.message}</td></tr>`;
             });
         }
-        
-        // --- FILE PREVIEW ---
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const files = e.target.files;
-            const container = document.getElementById('fileListContainer');
-            const list = document.getElementById('selectedFilesList');
-            list.innerHTML = '';
-            
-            if(files.length > 0) {
-                container.classList.remove('hidden');
-                for(let i=0; i<files.length; i++) {
-                    let li = document.createElement('li');
-                    li.innerHTML = `<i class="fas fa-file-excel text-green-600 mr-1.5"></i> ${files[i].name}`;
-                    list.appendChild(li);
-                }
-            } else {
-                container.classList.add('hidden');
-            }
+        function openEditUser(e){ const u=allUsersData.find(x=>x.email===e); if(!u)return; document.getElementById('editEmailHidden').value=u.email; document.getElementById('editEmail').value=u.email; document.getElementById('editNama').value=u.nama; document.getElementById('editRuangan').value=u.ruangan; document.getElementById('editRole').value=u.role; document.getElementById('editStatus').value=u.status; const p=u.permissions||[]; document.querySelectorAll('.perm-check').forEach(c=>{c.checked=p.includes(c.value)||p.includes('ALL')}); document.getElementById('view-edit-user').classList.remove('hidden'); }
+        function closeEditModal(){ document.getElementById('view-edit-user').classList.add('hidden'); }
+        document.getElementById('editUserForm').addEventListener('submit', function(e){
+            e.preventDefault(); toggleLoader(true);
+            const p=[]; document.querySelectorAll('.perm-check:checked').forEach(c=>p.push(c.value));
+            fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'update_user', adminEmail:currentUser.email, targetEmail:document.getElementById('editEmailHidden').value, nama:document.getElementById('editNama').value, ruangan:document.getElementById('editRuangan').value, role:document.getElementById('editRole').value, status:document.getElementById('editStatus').value, permissions:p})})
+            .then(r=>r.json()).then(d=>{ toggleLoader(false); closeEditModal(); if(d.status==='success'){Swal.fire('Sukses','Update User','success'); loadUsers();} else Swal.fire('Gagal',d.message,'error'); });
         });
+        function deleteUser(e){ Swal.fire({title:'Hapus?', icon:'warning', showCancelButton:true, confirmButtonColor:'#d33', confirmButtonText:'Hapus'}).then((r)=>{ if(r.isConfirmed){ toggleLoader(true); fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'update_user', adminEmail:currentUser.email, targetEmail:e, isDelete:true})}).then(j=>j.json()).then(d=>{ toggleLoader(false); if(d.status==='success') loadUsers(); else Swal.fire('Gagal',d.message,'error'); }); } }); }
+
+        function loadLogs() {
+            const t = document.getElementById('historyTableBody'); t.innerHTML='<tr><td colspan="4" class="text-center p-4">Loading...</td></tr>';
+            fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'get_logs', userEmail:currentUser.email})}).then(r=>r.json()).then(d=>{
+                t.innerHTML=''; if(d.status==='success') d.data.forEach(l=>{ let c=l.status==='SUKSES'?'text-green-600':'text-red-600'; t.innerHTML+=`<tr class="border-b"><td class="p-3 text-xs text-gray-500">${new Date(l.time).toLocaleString()}</td><td class="p-3 font-bold text-xs">${l.action}</td><td class="p-3 text-xs">${l.detail}</td><td class="p-3 text-xs font-bold ${c}">${l.status}</td></tr>`; });
+            });
+        }
     </script>
 </body>
 </html>
