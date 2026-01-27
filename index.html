@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Manajemen Jadwal RS</title>
     
-    <!-- Library Eksternal -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,8 +13,6 @@
         .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Custom Tab Styles */
-        .tab-btn { transition: all 0.3s ease; }
         .tab-btn.active { 
             background-color: white; 
             color: #2563EB; 
@@ -26,10 +23,6 @@
             color: #6B7280;
             background-color: #F3F4F6;
         }
-        .tab-btn:not(.active):hover {
-            background-color: #E5E7EB;
-            color: #374151;
-        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 font-sans">
@@ -39,7 +32,7 @@
         <!-- Header -->
         <div class="bg-blue-600 p-6 text-center text-white">
             <h1 class="text-2xl font-bold"><i class="fas fa-hospital-user mr-2"></i>Sistem Jadwal RS</h1>
-            <p class="text-blue-100 text-xs mt-1 uppercase tracking-wider">Rekapitulasi & Arsip Digital</p>
+            <p class="text-blue-100 text-xs mt-1 uppercase tracking-wider">Multi-File Upload Support</p>
         </div>
 
         <!-- Tab Navigation -->
@@ -52,84 +45,93 @@
             </button>
         </div>
 
-        <!-- CONTENT AREA -->
         <div class="p-8 relative">
             
-            <!-- 1. SECTION UPLOAD -->
+            <!-- SECTION UPLOAD -->
             <div id="section-upload" class="fade-in">
-                <form id="uploadForm" class="space-y-5">
-                    <!-- Bulan Upload -->
-                    <div>
-                        <label class="block text-gray-700 text-xs font-bold mb-2 uppercase tracking-wide">Bulan Laporan</label>
-                        <select id="uploadMonth" required class="block w-full bg-gray-50 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-                            <option value="" disabled selected>-- Pilih Bulan --</option>
-                            <option value="Januari">Januari</option>
-                            <option value="Februari">Februari</option>
-                            <option value="Maret">Maret</option>
-                            <option value="April">April</option>
-                            <option value="Mei">Mei</option>
-                            <option value="Juni">Juni</option>
-                            <option value="Juli">Juli</option>
-                            <option value="Agustus">Agustus</option>
-                            <option value="September">September</option>
-                            <option value="Oktober">Oktober</option>
-                            <option value="November">November</option>
-                            <option value="Desember">Desember</option>
-                        </select>
-                    </div>
-
-                    <!-- Ruangan -->
-                    <div>
-                        <label class="block text-gray-700 text-xs font-bold mb-2 uppercase tracking-wide">Asal Ruangan</label>
-                        <select id="room" required class="block w-full bg-gray-50 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-                            <option value="" disabled selected>-- Pilih Ruangan --</option>
-                            <option value="Ruang HD">Ruang HD</option>
-                            <option value="Ruang ICCU">Ruang ICCU</option>
-                            <option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option>
-                            <option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option>
-                            <option value="Ruang UGD">Ruang UGD</option>
-                            <option value="Ruang Operasi">Ruang Operasi</option>
-                            <option value="Ruang Bersalin">Ruang Bersalin</option>
-                            <option value="Poli Rawat Jalan">Poli Rawat Jalan</option>
-                        </select>
-                    </div>
-
-                    <!-- File Input -->
-                    <div>
-                        <label class="block text-gray-700 text-xs font-bold mb-2 uppercase tracking-wide">File Jadwal (.xlsx)</label>
-                        <div class="relative">
-                            <input id="fileInput" type="file" class="hidden" accept=".xlsx" required />
-                            <label for="fileInput" class="flex items-center justify-between w-full p-3 border-2 border-dashed border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 transition group">
-                                <div class="flex items-center">
-                                    <div class="bg-blue-100 text-blue-600 p-2 rounded-md mr-3 group-hover:bg-blue-200 transition">
-                                        <i class="fas fa-file-excel"></i>
-                                    </div>
-                                    <span id="fileNameDisplay" class="text-sm text-gray-500 font-medium">Pilih file...</span>
-                                </div>
-                                <span class="text-xs text-blue-500 font-bold uppercase">Browse</span>
-                            </label>
+                <form id="uploadForm" class="space-y-4">
+                    <!-- Bulan & Ruangan -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 text-xs font-bold mb-2 uppercase">Bulan</label>
+                            <select id="uploadMonth" required class="block w-full bg-gray-50 border border-gray-300 text-sm py-2 px-3 rounded-lg focus:ring-blue-500 focus:outline-none">
+                                <option value="" disabled selected>-- Pilih --</option>
+                                <option value="Januari">Januari</option>
+                                <option value="Februari">Februari</option>
+                                <option value="Maret">Maret</option>
+                                <option value="April">April</option>
+                                <option value="Mei">Mei</option>
+                                <option value="Juni">Juni</option>
+                                <option value="Juli">Juli</option>
+                                <option value="Agustus">Agustus</option>
+                                <option value="September">September</option>
+                                <option value="Oktober">Oktober</option>
+                                <option value="November">November</option>
+                                <option value="Desember">Desember</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-xs font-bold mb-2 uppercase">Ruangan</label>
+                            <select id="room" required class="block w-full bg-gray-50 border border-gray-300 text-sm py-2 px-3 rounded-lg focus:ring-blue-500 focus:outline-none">
+                                <option value="" disabled selected>-- Pilih --</option>
+                                <option value="Ruang HD">Ruang HD</option>
+                                <option value="Ruang ICCU">Ruang ICCU</option>
+                                <option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option>
+                                <option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option>
+                                <option value="Ruang UGD">Ruang UGD</option>
+                                <option value="Ruang Operasi">Ruang Operasi</option>
+                                <option value="Ruang Bersalin">Ruang Bersalin</option>
+                                <option value="Poli Rawat Jalan">Poli Rawat Jalan</option>
+                            </select>
                         </div>
                     </div>
 
-                    <button type="submit" id="btnUpload" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg shadow-md transition transform hover:-translate-y-0.5 mt-2">
-                        <i class="fas fa-paper-plane mr-2"></i> Upload & Proses
+                    <!-- File Input (MULTIPLE) -->
+                    <div>
+                        <label class="block text-gray-700 text-xs font-bold mb-2 uppercase tracking-wide">
+                            File Jadwal (.xlsx) - <span class="text-blue-500 font-normal">Bisa pilih banyak file</span>
+                        </label>
+                        <div class="relative">
+                            <!-- attribute 'multiple' ditambahkan di sini -->
+                            <input id="fileInput" type="file" class="hidden" accept=".xlsx" multiple required />
+                            <label for="fileInput" class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 transition group">
+                                <div class="flex flex-col items-center justify-center pt-2">
+                                    <i class="fas fa-folder-plus text-2xl text-blue-400 group-hover:text-blue-600 mb-1"></i>
+                                    <p class="text-xs text-gray-500 group-hover:text-gray-700">Klik untuk pilih file-file</p>
+                                </div>
+                            </label>
+                        </div>
+                        <!-- List File Terpilih -->
+                        <div id="fileListContainer" class="mt-2 text-xs text-gray-500 hidden">
+                            <p class="font-bold">File Terpilih:</p>
+                            <ul id="selectedFilesList" class="list-disc ml-5 max-h-20 overflow-y-auto"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Upload Log Area (Hasil Rinci) -->
+                    <div id="uploadLogArea" class="hidden mt-4 bg-gray-50 rounded-lg border border-gray-200 p-3">
+                        <h3 class="text-xs font-bold text-gray-700 mb-2 border-b pb-1">Status Upload:</h3>
+                        <ul id="uploadLogList" class="space-y-2 text-xs">
+                            <!-- Log items inserted here -->
+                        </ul>
+                    </div>
+
+                    <button type="submit" id="btnUpload" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-md transition transform hover:-translate-y-0.5">
+                        <i class="fas fa-paper-plane mr-2"></i> Proses Semua File
                     </button>
                 </form>
             </div>
 
-            <!-- 2. SECTION DOWNLOAD -->
+            <!-- SECTION DOWNLOAD -->
             <div id="section-download" class="hidden fade-in">
                 <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                    <div class="flex items-start">
-                        <i class="fas fa-info-circle text-green-600 mt-1 mr-3"></i>
-                        <p class="text-sm text-green-800">Fitur ini akan mengunduh rekapitulasi lengkap untuk satu bulan terpilih dalam format Excel (.xlsx).</p>
-                    </div>
+                    <p class="text-sm text-green-800"><i class="fas fa-info-circle mr-2"></i>Download rekapitulasi lengkap per bulan.</p>
                 </div>
 
                 <form id="downloadForm" class="space-y-6">
                     <div>
-                        <label class="block text-gray-700 text-xs font-bold mb-2 uppercase tracking-wide">Pilih Bulan Rekap</label>
-                        <select id="downloadMonth" required class="block w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition">
+                        <label class="block text-gray-700 text-xs font-bold mb-2 uppercase">Bulan Rekap</label>
+                        <select id="downloadMonth" required class="block w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg focus:ring-green-500 focus:outline-none">
                             <option value="" disabled selected>-- Pilih Bulan --</option>
                             <option value="Januari">Januari</option>
                             <option value="Februari">Februari</option>
@@ -146,159 +148,199 @@
                         </select>
                     </div>
 
-                    <button type="submit" id="btnDownload" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-lg shadow-md transition transform hover:-translate-y-0.5">
+                    <button type="submit" id="btnDownload" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-lg shadow-md transition">
                         <i class="fas fa-file-download mr-2"></i> Download Excel
                     </button>
                 </form>
             </div>
 
-            <!-- Loading Overlay (Shared) -->
-            <div id="loading" class="hidden absolute inset-0 bg-white/90 z-50 flex flex-col justify-center items-center rounded-b-2xl">
-                <div class="relative">
-                    <div class="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <i class="fas fa-bolt text-blue-600 text-xs"></i>
-                    </div>
-                </div>
-                <h3 class="text-gray-800 font-bold text-sm mt-4" id="loadingText">Memproses Data...</h3>
-                <p class="text-gray-500 text-xs mt-1">Mohon tunggu sebentar</p>
+            <!-- Loading Overlay -->
+            <div id="loading" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col justify-center items-center rounded-b-2xl">
+                <div class="w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+                <h3 class="text-gray-800 font-bold text-sm mt-4" id="loadingText">Memproses...</h3>
+                <p id="loadingSubText" class="text-gray-500 text-xs mt-1">Mohon tunggu</p>
             </div>
 
-        </div>
-        
-        <!-- Footer -->
-        <div class="bg-gray-50 p-4 text-center border-t border-gray-100">
-            <p class="text-xs text-gray-400">&copy; 2024 RS Management System</p>
         </div>
     </div>
 
     <script>
-        // URL SCRIPT ANDA
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5e8er60YVZ1m0r4Gn7RdkupWttdB1pyiXwD5Qdj7A1wF42abaSxy1QAvBhFI1Fone/exec';
 
-        // --- TAB SWITCHING LOGIC ---
+        // --- TAB SWITCHING ---
         function switchTab(tab) {
-            const uploadSec = document.getElementById('section-upload');
-            const downloadSec = document.getElementById('section-download');
-            const tabUpload = document.getElementById('tab-upload');
-            const tabDownload = document.getElementById('tab-download');
-
-            if (tab === 'upload') {
-                uploadSec.classList.remove('hidden');
-                downloadSec.classList.add('hidden');
-                tabUpload.classList.add('active');
-                tabDownload.classList.remove('active');
-            } else {
-                uploadSec.classList.add('hidden');
-                downloadSec.classList.remove('hidden');
-                tabUpload.classList.remove('active');
-                tabDownload.classList.add('active');
-            }
+            document.getElementById('section-upload').classList.toggle('hidden', tab !== 'upload');
+            document.getElementById('section-download').classList.toggle('hidden', tab !== 'download');
+            document.getElementById('tab-upload').classList.toggle('active', tab === 'upload');
+            document.getElementById('tab-download').classList.toggle('active', tab === 'download');
         }
 
-        // --- UI HELPERS ---
+        // --- UI UTILS ---
         const loading = document.getElementById('loading');
         const loadingText = document.getElementById('loadingText');
-
-        function toggleLoading(show, text = "Memproses...") {
-            if (show) {
-                loading.classList.remove('hidden');
+        const loadingSubText = document.getElementById('loadingSubText');
+        
+        function toggleLoading(show, text = "Memproses...", sub = "") {
+            loading.classList.toggle('hidden', !show);
+            if(show) {
                 loadingText.textContent = text;
-            } else {
-                loading.classList.add('hidden');
+                loadingSubText.textContent = sub;
             }
         }
 
-        // --- UPLOAD HANDLER ---
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const fileName = e.target.files[0] ? e.target.files[0].name : "Pilih file...";
-            document.getElementById('fileNameDisplay').textContent = fileName;
-            document.getElementById('fileNameDisplay').classList.add('text-gray-800');
+        function addLog(fileName, status, message) {
+            const list = document.getElementById('uploadLogList');
+            const li = document.createElement('li');
+            li.className = "flex items-start pb-2 border-b border-gray-100 last:border-0";
+            
+            let iconClass = status === 'success' ? 'fa-check-circle text-green-500' : 'fa-times-circle text-red-500';
+            
+            li.innerHTML = `
+                <i class="fas ${iconClass} mt-0.5 mr-2"></i>
+                <div class="flex-1">
+                    <div class="font-semibold text-gray-800">${fileName}</div>
+                    <div class="text-gray-500" style="font-size: 0.7rem;">${message}</div>
+                </div>
+            `;
+            list.appendChild(li);
+        }
+
+        // --- FILE SELECTION ---
+        const fileInput = document.getElementById('fileInput');
+        fileInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            const listContainer = document.getElementById('fileListContainer');
+            const ul = document.getElementById('selectedFilesList');
+            ul.innerHTML = '';
+            
+            if (files.length > 0) {
+                listContainer.classList.remove('hidden');
+                for (let i = 0; i < files.length; i++) {
+                    const li = document.createElement('li');
+                    li.textContent = files[i].name;
+                    ul.appendChild(li);
+                }
+            } else {
+                listContainer.classList.add('hidden');
+            }
         });
 
-        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        // --- BULK UPLOAD HANDLER ---
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const fileInput = document.getElementById('fileInput');
+            const files = fileInput.files;
             
-            if (fileInput.files.length === 0) {
-                Swal.fire('Warning', 'Pilih file excel terlebih dahulu', 'warning');
+            if (files.length === 0) {
+                Swal.fire('Warning', 'Pilih minimal satu file', 'warning');
                 return;
             }
 
-            toggleLoading(true, "Mengupload & Update Data...");
-
-            const file = fileInput.files[0];
-            const reader = new FileReader();
+            // Reset Log
+            document.getElementById('uploadLogArea').classList.remove('hidden');
+            document.getElementById('uploadLogList').innerHTML = '';
             
-            reader.onload = function(e) {
-                const payload = {
-                    action: 'upload', // Action Tag
-                    filename: file.name,
-                    file: e.target.result.split(',')[1],
-                    room: document.getElementById('room').value,
-                    month: document.getElementById('uploadMonth').value
-                };
+            const totalFiles = files.length;
+            let successCount = 0;
+            let failCount = 0;
 
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                })
-                .then(res => res.json())
-                .then(data => {
-                    toggleLoading(false);
-                    if (data.status === 'success') {
-                        Swal.fire({
-                            title: 'Sukses!',
-                            text: `Data berhasil diupdate. (${data.data.updatedRows} baris)`,
-                            icon: 'success'
-                        });
-                        document.getElementById('uploadForm').reset();
-                        document.getElementById('fileNameDisplay').textContent = "Pilih file...";
+            const room = document.getElementById('room').value;
+            const month = document.getElementById('uploadMonth').value;
+
+            // Kunci tombol submit
+            const btn = document.getElementById('btnUpload');
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // --- SEQUENTIAL UPLOAD LOOP ---
+            for (let i = 0; i < totalFiles; i++) {
+                const file = files[i];
+                toggleLoading(true, `Mengupload File ${i + 1} dari ${totalFiles}`, file.name);
+
+                try {
+                    // Convert to Base64
+                    const base64 = await toBase64(file);
+                    
+                    // Kirim ke Backend
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'upload',
+                            filename: file.name,
+                            file: base64,
+                            room: room,
+                            month: month
+                        })
+                    });
+                    
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        addLog(file.name, 'success', result.message);
+                        successCount++;
                     } else {
-                        throw new Error(data.message);
+                        addLog(file.name, 'error', result.message);
+                        failCount++;
                     }
-                })
-                .catch(err => {
-                    toggleLoading(false);
-                    Swal.fire('Gagal', err.message, 'error');
-                });
-            };
-            reader.readAsDataURL(file);
+
+                } catch (err) {
+                    console.error(err);
+                    addLog(file.name, 'error', 'Network Error: ' + err.message);
+                    failCount++;
+                }
+            }
+
+            toggleLoading(false);
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            // Final Summary Alert
+            if (failCount === 0) {
+                Swal.fire('Selesai!', `Semua ${totalFiles} file berhasil diupload.`, 'success');
+                document.getElementById('uploadForm').reset();
+                document.getElementById('fileListContainer').classList.add('hidden');
+            } else {
+                Swal.fire('Selesai dengan Error', `${successCount} sukses, ${failCount} gagal. Cek detail di log status.`, 'warning');
+            }
         });
+
+        // Helper: Convert File to Base64
+        function toBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
 
         // --- DOWNLOAD HANDLER ---
         document.getElementById('downloadForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const month = document.getElementById('downloadMonth').value;
-
-            toggleLoading(true, "Menyiapkan File Excel...");
-
-            const payload = {
-                action: 'download', // Action Tag
-                month: month
-            };
+            toggleLoading(true, "Menyiapkan Download...", "Sedang mengambil data dari server");
 
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                body: JSON.stringify(payload)
+                body: JSON.stringify({
+                    action: 'download',
+                    month: month
+                })
             })
             .then(res => res.json())
             .then(data => {
                 toggleLoading(false);
                 if (data.status === 'success') {
-                    // Logic untuk trigger download dari base64
                     const link = document.createElement('a');
                     link.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + data.data.file;
                     link.download = data.data.filename;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    
                     Swal.fire({
-                        title: 'File Siap!',
-                        text: `Rekap bulan ${month} berhasil didownload.`,
+                        title: 'Berhasil',
+                        text: 'File rekap telah didownload.',
                         icon: 'success',
-                        timer: 2000,
+                        timer: 1500,
                         showConfirmButton: false
                     });
                 } else {
