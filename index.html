@@ -15,7 +15,6 @@
     <style>
         .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        /* Sidebar active state */
         .nav-item.active { background-color: #1E40AF; border-right: 4px solid #60A5FA; }
     </style>
 </head>
@@ -24,14 +23,10 @@
     <!-- ================= VIEW: LOGIN ================= -->
     <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800">
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-96 text-center fade-in">
-            <div class="mb-6">
-                <i class="fas fa-hospital-alt text-5xl text-blue-600"></i>
-            </div>
+            <div class="mb-6"><i class="fas fa-hospital-alt text-5xl text-blue-600"></i></div>
             <h2 class="text-2xl font-bold text-gray-800 mb-1">E-Rekap Jadwal RS</h2>
             <p class="text-gray-500 text-sm mb-6">Silakan login dengan akun Google</p>
             
-            <!-- Google Button Container -->
-            <!-- CLIENT ID ANDA SUDAH DIPASANG DI SINI -->
             <div id="g_id_onload"
                  data-client_id="783459415718-mp0vsmd2lopajf2ut0aqc6drjrs95pu8.apps.googleusercontent.com" 
                  data-callback="handleCredentialResponse"
@@ -43,7 +38,7 @@
         </div>
     </div>
 
-    <!-- ================= VIEW: REGISTER (Modal) ================= -->
+    <!-- ================= VIEW: REGISTER ================= -->
     <div id="view-register" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-black/50">
         <div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-md fade-in">
             <h2 class="text-xl font-bold mb-4 text-blue-600">Pendaftaran Pengguna Baru</h2>
@@ -81,8 +76,6 @@
 
     <!-- ================= VIEW: DASHBOARD ================= -->
     <div id="view-dashboard" class="hidden flex w-full h-full">
-        
-        <!-- SIDEBAR -->
         <div class="w-64 bg-blue-800 text-white flex flex-col shadow-xl">
             <div class="p-6 border-b border-blue-700">
                 <h1 class="text-lg font-bold"><i class="fas fa-heartbeat mr-2"></i>SIM RS</h1>
@@ -103,7 +96,6 @@
                 <a href="#" onclick="navTo('history')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-700 transition">
                     <i class="fas fa-history w-6"></i> <span class="text-sm">Riwayat</span>
                 </a>
-                <!-- Admin Menu -->
                 <div id="adminMenu" class="hidden mt-4 pt-4 border-t border-blue-700">
                     <p class="px-6 text-xs text-blue-400 font-bold mb-2 uppercase">Admin Area</p>
                     <a href="#" onclick="navTo('users')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-700 transition">
@@ -119,10 +111,8 @@
             </div>
         </div>
 
-        <!-- MAIN CONTENT -->
         <div class="flex-1 bg-gray-50 overflow-y-auto p-8 relative">
-            
-            <!-- CONTENT: HOME -->
+            <!-- PAGE: HOME -->
             <div id="page-home" class="page-content fade-in">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Dashboard</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -137,7 +127,7 @@
                 </div>
             </div>
 
-            <!-- CONTENT: UPLOAD -->
+            <!-- PAGE: UPLOAD -->
             <div id="page-upload" class="page-content hidden fade-in">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Upload Jadwal</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md max-w-2xl">
@@ -162,7 +152,6 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold mb-1">Ruangan</label>
-                                <!-- Dropdown ini akan dilock otomatis untuk user biasa -->
                                 <select id="uploadRoom" class="w-full border p-2 rounded text-sm bg-gray-100">
                                     <option value="Ruang HD">Ruang HD</option>
                                     <option value="Ruang ICCU">Ruang ICCU</option>
@@ -175,39 +164,30 @@
                                 </select>
                             </div>
                         </div>
-                        
                         <div>
                             <label class="block text-xs font-bold mb-1">File .xlsx (Multiple)</label>
                             <input type="file" id="fileInput" multiple accept=".xlsx" class="w-full border p-2 rounded text-sm">
                         </div>
-                        
-                        <!-- Log Area -->
                         <div id="uploadLog" class="hidden text-xs bg-gray-50 p-2 rounded h-40 overflow-y-auto border"></div>
-                        
                         <button type="submit" id="btnUpload" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700">Upload</button>
                     </form>
                 </div>
             </div>
             
-            <!-- CONTENT: HISTORY -->
+            <!-- PAGE: HISTORY -->
             <div id="page-history" class="page-content hidden fade-in">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Riwayat Aktivitas</h2>
                 <div class="bg-white rounded-lg shadow overflow-hidden">
                     <table class="w-full text-sm text-left">
                         <thead class="bg-gray-100 text-gray-700">
-                            <tr>
-                                <th class="p-3">Waktu</th>
-                                <th class="p-3">Aksi</th>
-                                <th class="p-3">Detail</th>
-                                <th class="p-3">Status</th>
-                            </tr>
+                            <tr><th class="p-3">Waktu</th><th class="p-3">Aksi</th><th class="p-3">Detail</th><th class="p-3">Status</th></tr>
                         </thead>
                         <tbody id="historyTableBody"></tbody>
                     </table>
                 </div>
             </div>
             
-            <!-- CONTENT: DOWNLOAD -->
+            <!-- PAGE: DOWNLOAD -->
             <div id="page-download" class="page-content hidden fade-in">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Download Rekap</h2>
                 <div class="bg-white p-6 rounded-lg shadow max-w-lg">
@@ -218,14 +198,21 @@
                             <option value="Februari">Februari</option>
                             <option value="Maret">Maret</option>
                             <option value="April">April</option>
-                            <!-- dst -->
+                            <option value="Mei">Mei</option>
+                            <option value="Juni">Juni</option>
+                            <option value="Juli">Juli</option>
+                            <option value="Agustus">Agustus</option>
+                            <option value="September">September</option>
+                            <option value="Oktober">Oktober</option>
+                            <option value="November">November</option>
+                            <option value="Desember">Desember</option>
                         </select>
                     </div>
                     <button onclick="doDownload()" class="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700">Download Excel</button>
                 </div>
             </div>
 
-            <!-- CONTENT: USER MANAGEMENT (Admin Only) -->
+            <!-- PAGE: USERS -->
             <div id="page-users" class="page-content hidden fade-in">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800">Manajemen User</h2>
@@ -234,20 +221,12 @@
                 <div class="bg-white rounded-lg shadow overflow-x-auto">
                     <table class="w-full text-sm text-left">
                         <thead class="bg-gray-800 text-white">
-                            <tr>
-                                <th class="p-3">Email</th>
-                                <th class="p-3">Nama</th>
-                                <th class="p-3">Role</th>
-                                <th class="p-3">Ruangan</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3 text-center">Aksi</th>
-                            </tr>
+                            <tr><th class="p-3">Email</th><th class="p-3">Nama</th><th class="p-3">Role</th><th class="p-3">Ruangan</th><th class="p-3">Status</th><th class="p-3 text-center">Aksi</th></tr>
                         </thead>
                         <tbody id="userTableBody"></tbody>
                     </table>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -257,38 +236,23 @@
         <p class="mt-2 text-sm text-gray-600">Memproses...</p>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT -->
     <script>
-        // --- KONFIGURASI URL WEB APP ANDA ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5e8er60YVZ1m0r4Gn7RdkupWttdB1pyiXwD5Qdj7A1wF42abaSxy1QAvBhFI1Fone/exec';
-        
         let currentUser = null; 
 
-        // --- AUTH & LOGIN ---
+        // --- AUTH ---
         function handleCredentialResponse(response) {
             toggleLoader(true);
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'verify_token',
-                    credential: response.credential
-                })
-            })
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'verify_token', credential: response.credential }) })
             .then(res => res.json())
             .then(data => {
                 toggleLoader(false);
-                if (data.status === 'success') {
-                    loginSuccess(data.data);
-                } else if (data.status === 'new_user') {
-                    showRegisterModal(data.data.email);
-                } else {
-                    document.getElementById('loginStatus').textContent = data.message;
-                }
+                if (data.status === 'success') loginSuccess(data.data);
+                else if (data.status === 'new_user') showRegisterModal(data.data.email);
+                else document.getElementById('loginStatus').textContent = data.message;
             })
-            .catch(err => {
-                toggleLoader(false);
-                alert("Error Login: " + err);
-            });
+            .catch(err => { toggleLoader(false); alert("Error Login: " + err); });
         }
 
         function showRegisterModal(email) {
@@ -300,7 +264,6 @@
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             toggleLoader(true);
-            
             const payload = {
                 action: 'register',
                 email: document.getElementById('regEmail').value,
@@ -308,7 +271,6 @@
                 ruangan: document.getElementById('regRuangan').value,
                 hp: document.getElementById('regHP').value
             };
-
             fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
             .then(res => res.json())
             .then(data => {
@@ -316,9 +278,7 @@
                 if(data.status === 'success') {
                     alert("Registrasi Berhasil! Silakan login kembali.");
                     location.reload(); 
-                } else {
-                    alert(data.message);
-                }
+                } else alert(data.message);
             });
         });
 
@@ -326,29 +286,23 @@
             currentUser = user;
             document.getElementById('view-login').classList.add('hidden');
             document.getElementById('view-dashboard').classList.remove('hidden');
-            
             document.getElementById('userDisplay').textContent = user.nama;
             document.getElementById('roleDisplay').textContent = user.role;
             document.getElementById('dashRoom').textContent = user.ruangan;
-
             setupPermissions(user);
             navTo('home');
         }
 
         function setupPermissions(user) {
             const isAdmin = user.role === 'ADMIN' || user.role === 'SUPER_ADMIN';
-            
             if(isAdmin) document.getElementById('adminMenu').classList.remove('hidden');
-            
             const upRoom = document.getElementById('uploadRoom');
             if(!isAdmin) {
                 upRoom.value = user.ruangan;
-                upRoom.disabled = true; // KUNCI RUANGAN
+                upRoom.disabled = true;
             } else {
                 upRoom.disabled = false;
             }
-            
-            // Sembunyikan menu download jika tidak ada izin
             if(!user.permissions.includes('download') && !user.permissions.includes('ALL')) {
                 document.getElementById('nav-download').classList.add('hidden');
             }
@@ -359,13 +313,10 @@
             location.reload();
         }
 
-        // --- NAVIGATION ---
         function navTo(pageId) {
             document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
             document.getElementById('page-' + pageId).classList.remove('hidden');
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            // Highlight sidebar logic can be improved here
-            
             if(pageId === 'history') loadLogs();
             if(pageId === 'users') loadUsers();
         }
@@ -374,48 +325,34 @@
             document.getElementById('globalLoading').classList.toggle('hidden', !show);
         }
 
-        // --- UPLOAD LOGIC ---
+        // --- UPLOAD ---
         document.getElementById('uploadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const files = document.getElementById('fileInput').files;
             if(files.length === 0) return Swal.fire('Error', 'Pilih file!', 'error');
-
             const logDiv = document.getElementById('uploadLog');
             logDiv.classList.remove('hidden');
             logDiv.innerHTML = '<b>Memulai proses...</b><br>';
-            
             const room = document.getElementById('uploadRoom').value;
             const month = document.getElementById('uploadMonth').value;
 
             for(let i=0; i<files.length; i++) {
                 let file = files[i];
                 logDiv.innerHTML += `Uploading: ${file.name}... `;
-                
                 try {
                     let base64 = await toBase64(file);
                     let res = await fetch(SCRIPT_URL, {
                         method: 'POST',
                         body: JSON.stringify({
-                            action: 'upload',
-                            userEmail: currentUser.email,
-                            file: base64,
-                            filename: file.name,
-                            room: room,
-                            month: month
+                            action: 'upload', userEmail: currentUser.email, file: base64, filename: file.name, room: room, month: month
                         })
                     }).then(r => r.json());
 
                     if(res.status === 'success') {
-                         let fixedMsg = res.data.fixedDataCount > 0 ? 
-                             `<span class="text-orange-600">(${res.data.fixedDataCount} data diperbaiki)</span>` : "";
-                         
+                         let fixedMsg = res.data.fixedDataCount > 0 ? `<span class="text-orange-600">(${res.data.fixedDataCount} data diperbaiki)</span>` : "";
                          logDiv.innerHTML += `<span class="text-green-600 font-bold">SUKSES</span> ${fixedMsg}<br>`;
-                         
-                         // Jika ada detail log perbaikan
                          if(res.data.changeLog && res.data.changeLog.length > 0) {
-                             let details = res.data.changeLog.map(l => 
-                                 `Baris ${l.row}: ${l.orig} -> ${l.fixed} (${l.reason})`
-                             ).join("<br>");
+                             let details = res.data.changeLog.map(l => `Baris ${l.row}: ${l.orig} -> ${l.fixed} (${l.reason})`).join("<br>");
                              logDiv.innerHTML += `<div class="ml-4 text-[10px] text-gray-500 mb-1 border-l pl-2">${details}</div>`;
                          }
                     } else {
@@ -436,19 +373,11 @@
             });
         }
 
-        // --- DOWNLOAD LOGIC ---
+        // --- DOWNLOAD ---
         function doDownload() {
             const month = document.getElementById('dlMonth').value;
             toggleLoader(true);
-            
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'download',
-                    userEmail: currentUser.email,
-                    month: month
-                })
-            })
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'download', userEmail: currentUser.email, month: month }) })
             .then(res => res.json())
             .then(data => {
                 toggleLoader(false);
@@ -460,71 +389,38 @@
                     link.click();
                     document.body.removeChild(link);
                     Swal.fire('Berhasil', 'File didownload', 'success');
-                } else {
-                    Swal.fire('Gagal', data.message, 'error');
-                }
+                } else Swal.fire('Gagal', data.message, 'error');
             });
         }
 
-        // --- ADMIN: USER MANAGEMENT ---
+        // --- USERS ---
         function loadUsers() {
             const tbody = document.getElementById('userTableBody');
             tbody.innerHTML = '<tr><td colspan="6" class="text-center p-4">Loading...</td></tr>';
-            
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'get_users',
-                    adminEmail: currentUser.email
-                })
-            })
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'get_users', adminEmail: currentUser.email }) })
             .then(res => res.json())
             .then(data => {
                 tbody.innerHTML = '';
                 if(data.status === 'success') {
                     data.data.forEach(u => {
-                        let actions = `
-                            <button onclick="deleteUser('${u.email}')" class="text-red-500 hover:text-red-700 ml-2" title="Hapus"><i class="fas fa-trash"></i></button>
-                        `;
+                        let actions = `<button onclick="deleteUser('${u.email}')" class="text-red-500 hover:text-red-700 ml-2" title="Hapus"><i class="fas fa-trash"></i></button>`;
                         if(u.role === 'SUPER_ADMIN') actions = '<span class="text-gray-300">-</span>';
-
-                        tbody.innerHTML += `
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3">${u.email}</td>
-                                <td class="p-3 font-medium">${u.nama}</td>
-                                <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${u.role}</span></td>
-                                <td class="p-3">${u.ruangan}</td>
-                                <td class="p-3 text-xs">${u.status}</td>
-                                <td class="p-3 text-center">${actions}</td>
-                            </tr>
-                        `;
+                        tbody.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-3">${u.email}</td><td class="p-3 font-medium">${u.nama}</td><td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${u.role}</span></td><td class="p-3">${u.ruangan}</td><td class="p-3 text-xs">${u.status}</td><td class="p-3 text-center">${actions}</td></tr>`;
                     });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-red-500">${data.message}</td></tr>`;
-                }
+                } else tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-red-500">${data.message}</td></tr>`;
             });
         }
         
         function deleteUser(email) {
             if(!confirm("Yakin hapus user ini?")) return;
             toggleLoader(true);
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'update_user',
-                    adminEmail: currentUser.email,
-                    targetEmail: email,
-                    delete: true
-                })
-            })
+            // Sesuai perbaikan di Code.gs, gunakan isDelete
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'update_user', adminEmail: currentUser.email, targetEmail: email, isDelete: true }) })
             .then(res => res.json())
             .then(data => {
                 toggleLoader(false);
-                if(data.status === 'success') {
-                    loadUsers();
-                } else {
-                    alert(data.message);
-                }
+                if(data.status === 'success') loadUsers();
+                else alert(data.message);
             });
         }
 
@@ -532,14 +428,7 @@
         function loadLogs() {
             const tbody = document.getElementById('historyTableBody');
             tbody.innerHTML = '<tr><td colspan="4" class="text-center p-4">Loading...</td></tr>';
-            
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'get_logs',
-                    userEmail: currentUser.email
-                })
-            })
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'get_logs', userEmail: currentUser.email }) })
             .then(res => res.json())
             .then(data => {
                 tbody.innerHTML = '';
@@ -547,14 +436,7 @@
                     data.data.forEach(log => {
                         let date = new Date(log.time).toLocaleString();
                         let statusColor = log.status === 'SUKSES' ? 'text-green-600' : 'text-red-600';
-                        tbody.innerHTML += `
-                            <tr class="border-b">
-                                <td class="p-3 text-gray-500 text-xs">${date}</td>
-                                <td class="p-3 font-bold text-xs">${log.action}</td>
-                                <td class="p-3 text-xs">${log.detail}</td>
-                                <td class="p-3 font-bold ${statusColor} text-xs">${log.status}</td>
-                            </tr>
-                        `;
+                        tbody.innerHTML += `<tr class="border-b"><td class="p-3 text-gray-500 text-xs">${date}</td><td class="p-3 font-bold text-xs">${log.action}</td><td class="p-3 text-xs">${log.detail}</td><td class="p-3 font-bold ${statusColor} text-xs">${log.status}</td></tr>`;
                     });
                 }
             });
