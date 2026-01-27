@@ -13,24 +13,20 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
-        /* Base Animations */
         .fade-in { animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Sidebar Active State - Sea Theme */
         .nav-item.active { 
             background: linear-gradient(90deg, rgba(34, 211, 238, 0.15) 0%, transparent 100%); 
             border-right: 4px solid #facc15; 
             color: #22d3ee; 
         }
         
-        /* Custom Scrollbar */
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f0f9ff; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #7dd3fc; border-radius: 3px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
 
-        /* Animated Background */
         .animated-bg { 
             background: linear-gradient(-45deg, #083344, #0e7490, #0f766e, #164e63); 
             background-size: 400% 400%; 
@@ -49,54 +45,59 @@
 <body class="bg-slate-50 font-sans h-screen overflow-hidden flex text-slate-800">
 
     <!-- VIEW: LOGIN -->
-    <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center animated-bg p-4">
-        <div class="glass-card p-8 md:p-10 rounded-3xl shadow-2xl w-full max-w-sm text-center fade-in border-t-4 border-yellow-400 relative overflow-hidden">
+    <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center animated-bg">
+        <div class="glass-card p-10 rounded-3xl shadow-2xl w-96 text-center fade-in border-t-4 border-yellow-400 relative overflow-hidden">
             <div class="mb-6 inline-block p-4 rounded-full bg-cyan-50 relative z-10 shadow-sm">
-                <i class="fas fa-hospital-user text-4xl md:text-5xl text-cyan-600"></i>
+                <i class="fas fa-hospital-user text-5xl text-cyan-600"></i>
             </div>
-            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2 tracking-tight">E-Rekap RS</h2>
+            <h2 class="text-3xl font-bold text-slate-800 mb-2 tracking-tight">E-Rekap RS</h2>
             <p class="text-slate-500 text-sm mb-8 font-medium">Sistem Informasi Manajemen Jadwal</p>
             <div class="flex justify-center relative z-10">
                 <div id="g_id_onload" data-client_id="783459415718-mp0vsmd2lopajf2ut0aqc6drjrs95pu8.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
                 <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="pill" data-logo_alignment="left"></div>
             </div>
             <p id="loginStatus" class="mt-6 text-xs text-red-500 font-semibold"></p>
-            <div class="mt-8 text-[10px] text-slate-400 font-medium">&copy; 2026 RS Management System v2.2</div>
         </div>
     </div>
 
     <!-- VIEW: REGISTER -->
-    <div id="view-register" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-cyan-950/80 backdrop-blur-sm p-4">
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md fade-in border-t-4 border-yellow-400 max-h-[90vh] overflow-y-auto">
-            <div class="text-center mb-6"><h2 class="text-xl md:text-2xl font-bold text-cyan-800">Selamat Datang!</h2><p class="text-sm text-slate-500">Lengkapi profil Anda untuk melanjutkan</p></div>
+    <div id="view-register" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-cyan-950/80 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md fade-in border-t-4 border-yellow-400">
+            <div class="text-center mb-6"><h2 class="text-2xl font-bold text-cyan-800">Selamat Datang!</h2><p class="text-sm text-slate-500">Lengkapi profil Anda untuk melanjutkan</p></div>
             <form id="registerForm" class="space-y-4">
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">Email Akun</label><input type="text" id="regEmail" disabled class="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg text-sm text-slate-500 font-medium"></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap</label><input type="text" id="regNama" required class="w-full border border-slate-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 outline-none"></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">Unit / Ruangan</label><select id="regRuangan" required class="w-full border border-slate-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 bg-white"><option value="">-- Pilih --</option><option value="INSTALASI ANESTESI">INSTALASI ANESTESI</option><option value="INSTALASI BEDAH SENTRAL">INSTALASI BEDAH SENTRAL</option><option value="INSTALASI FARMASI">INSTALASI FARMASI</option><option value="INSTALASI GAT">INSTALASI GAT</option><option value="INSTALASI GAWAT DARURAT">INSTALASI GAWAT DARURAT</option><option value="INSTALASI GIZI">INSTALASI GIZI</option><option value="INSTALASI HEMODIALISA">INSTALASI HEMODIALISA</option><option value="INSTALASI IGD DOKTER">INSTALASI IGD DOKTER</option><option value="INSTALASI IGD PERAWAT">INSTALASI IGD PERAWAT</option><option value="INSTALASI LABORATORIUM">INSTALASI LABORATORIUM</option><option value="INSTALASI PEMELIHARAAN LINGKUNGAN">INSTALASI PEMELIHARAAN LINGKUNGAN</option><option value="INSTALASI PEMELIHARAAN SARANA">INSTALASI PEMELIHARAAN SARANA</option><option value="INSTALASI RADIOLOGI">INSTALASI RADIOLOGI</option><option value="INSTALASI RAWAT JALAN">INSTALASI RAWAT JALAN</option><option value="INSTALASI REHAB MEDIK">INSTALASI REHAB MEDIK</option><option value="INSTALASI REKAM MEDIS">INSTALASI REKAM MEDIS</option><option value="INSTALASI SIM RS">INSTALASI SIM RS</option><option value="RUANG ANGGREK">RUANG ANGGREK</option><option value="RUANG ANYELIR">RUANG ANYELIR</option><option value="RUANG ASTER">RUANG ASTER</option><option value="RUANG BOUGENVILLE">RUANG BOUGENVILLE</option><option value="RUANG FLAMBOYAN">RUANG FLAMBOYAN</option><option value="RUANG HCU">RUANG HCU</option><option value="RUANG ICCU">RUANG ICCU</option><option value="RUANG ICU">RUANG ICU</option><option value="RUANG IDIK">RUANG IDIK</option><option value="RUANG LILY">RUANG LILY</option><option value="RUANG MAWAR">RUANG MAWAR</option><option value="RUANG TERATAI ASOKA">RUANG TERATAI ASOKA</option><option value="RUANG VK BERSALIN">RUANG VK BERSALIN</option><option value="UNIT AMBULANCE">UNIT AMBULANCE</option><option value="UNIT CSSD">UNIT CSSD</option><option value="UNIT KEUANGAN KASIR">UNIT KEUANGAN KASIR</option><option value="UNIT KLAIM">UNIT KLAIM</option><option value="UNIT LOUNDRY">UNIT LOUNDRY</option><option value="UNIT PEMULASARAN JENAZAH">UNIT PEMULASARAN JENAZAH</option><option value="UNIT PENGADUAN">UNIT PENGADUAN</option><option value="UNIT PPI">UNIT PPI</option></select></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">WhatsApp</label><input type="text" id="regHP" required class="w-full border border-slate-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500" placeholder="08xxx"></div>
-                <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-3 rounded-lg font-bold shadow hover:shadow-lg transition">Simpan & Masuk</button>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">Email Akun</label><input type="text" id="regEmail" disabled class="w-full bg-slate-50 border p-3 rounded-lg text-sm text-slate-500 font-medium"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap</label><input type="text" id="regNama" required class="w-full border border-slate-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 outline-none transition"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">Unit / Ruangan</label>
+                    <select id="regRuangan" required class="w-full border border-slate-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 outline-none transition bg-white">
+                        <option value="">-- Pilih Ruangan --</option>
+                        <option value="INSTALASI ANESTESI">INSTALASI ANESTESI</option><option value="INSTALASI BEDAH SENTRAL">INSTALASI BEDAH SENTRAL</option><option value="INSTALASI FARMASI">INSTALASI FARMASI</option><option value="INSTALASI GAT">INSTALASI GAT</option><option value="INSTALASI GAWAT DARURAT">INSTALASI GAWAT DARURAT</option><option value="INSTALASI GIZI">INSTALASI GIZI</option><option value="INSTALASI HEMODIALISA">INSTALASI HEMODIALISA</option><option value="INSTALASI IGD DOKTER">INSTALASI IGD DOKTER</option><option value="INSTALASI IGD PERAWAT">INSTALASI IGD PERAWAT</option><option value="INSTALASI LABORATORIUM">INSTALASI LABORATORIUM</option><option value="INSTALASI PEMELIHARAAN LINGKUNGAN">INSTALASI PEMELIHARAAN LINGKUNGAN</option><option value="INSTALASI PEMELIHARAAN SARANA">INSTALASI PEMELIHARAAN SARANA</option><option value="INSTALASI RADIOLOGI">INSTALASI RADIOLOGI</option><option value="INSTALASI RAWAT JALAN">INSTALASI RAWAT JALAN</option><option value="INSTALASI REHAB MEDIK">INSTALASI REHAB MEDIK</option><option value="INSTALASI REKAM MEDIS">INSTALASI REKAM MEDIS</option><option value="INSTALASI SIM RS">INSTALASI SIM RS</option><option value="RUANG ANGGREK">RUANG ANGGREK</option><option value="RUANG ANYELIR">RUANG ANYELIR</option><option value="RUANG ASTER">RUANG ASTER</option><option value="RUANG BOUGENVILLE">RUANG BOUGENVILLE</option><option value="RUANG FLAMBOYAN">RUANG FLAMBOYAN</option><option value="RUANG HCU">RUANG HCU</option><option value="RUANG ICCU">RUANG ICCU</option><option value="RUANG ICU">RUANG ICU</option><option value="RUANG IDIK">RUANG IDIK</option><option value="RUANG LILY">RUANG LILY</option><option value="RUANG MAWAR">RUANG MAWAR</option><option value="RUANG TERATAI ASOKA">RUANG TERATAI ASOKA</option><option value="RUANG VK BERSALIN">RUANG VK BERSALIN</option><option value="UNIT AMBULANCE">UNIT AMBULANCE</option><option value="UNIT CSSD">UNIT CSSD</option><option value="UNIT KEUANGAN KASIR">UNIT KEUANGAN KASIR</option><option value="UNIT KLAIM">UNIT KLAIM</option><option value="UNIT LOUNDRY">UNIT LOUNDRY</option><option value="UNIT PEMULASARAN JENAZAH">UNIT PEMULASARAN JENAZAH</option><option value="UNIT PENGADUAN">UNIT PENGADUAN</option><option value="UNIT PPI">UNIT PPI</option>
+                    </select>
+                </div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">WhatsApp</label><input type="text" id="regHP" required class="w-full border border-slate-300 p-3 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 outline-none transition" placeholder="08xxx"></div>
+                <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-3 rounded-lg font-bold shadow hover:shadow-lg transition transform hover:-translate-y-0.5">Simpan & Masuk</button>
             </form>
         </div>
     </div>
 
     <!-- VIEW: EDIT USER (ADMIN) -->
-    <div id="view-edit-user" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-cyan-950/70 backdrop-blur-sm overflow-y-auto py-10 px-4">
-        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg fade-in my-auto border border-slate-200 relative">
-            <div class="flex justify-between items-center mb-5 border-b pb-3">
+    <div id="view-edit-user" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-cyan-950/70 backdrop-blur-sm overflow-y-auto py-10">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg fade-in my-auto border border-slate-200">
+            <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
                 <h2 class="text-lg font-bold text-slate-800">Edit User</h2>
-                <button onclick="closeEditModal()" class="text-slate-400 p-2 hover:text-slate-600"><i class="fas fa-times"></i></button>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600"><i class="fas fa-times"></i></button>
             </div>
             <form id="editUserForm" class="space-y-4">
                 <input type="hidden" id="editEmailHidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div><label class="block text-xs font-bold text-slate-600 mb-1">Email</label><input type="text" id="editEmail" disabled class="w-full bg-slate-50 border p-2 rounded text-xs text-slate-500"></div>
-                    <div><label class="block text-xs font-bold text-slate-600 mb-1">Role</label><select id="editRole" class="w-full border p-2 rounded text-xs bg-white"><option value="USER">User</option><option value="ADMIN">Admin</option></select></div>
+                    <div><label class="block text-xs font-bold text-slate-600 mb-1">Role</label><select id="editRole" class="w-full border p-2 rounded text-xs bg-white focus:ring-2 focus:ring-cyan-500 outline-none"><option value="USER">User</option><option value="ADMIN">Admin</option></select></div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama</label><input type="text" id="editNama" class="w-full border p-2 rounded text-xs"></div>
-                    <div><label class="block text-xs font-bold text-slate-600 mb-1">Ruangan</label><select id="editRuangan" class="w-full border p-2 rounded text-xs"><option value="INSTALASI ANESTESI">INSTALASI ANESTESI</option><option value="INSTALASI BEDAH SENTRAL">INSTALASI BEDAH SENTRAL</option><option value="INSTALASI FARMASI">INSTALASI FARMASI</option><option value="INSTALASI GAT">INSTALASI GAT</option><option value="INSTALASI GAWAT DARURAT">INSTALASI GAWAT DARURAT</option><option value="INSTALASI GIZI">INSTALASI GIZI</option><option value="INSTALASI HEMODIALISA">INSTALASI HEMODIALISA</option><option value="INSTALASI IGD DOKTER">INSTALASI IGD DOKTER</option><option value="INSTALASI IGD PERAWAT">INSTALASI IGD PERAWAT</option><option value="INSTALASI LABORATORIUM">INSTALASI LABORATORIUM</option><option value="INSTALASI PEMELIHARAAN LINGKUNGAN">INSTALASI PEMELIHARAAN LINGKUNGAN</option><option value="INSTALASI PEMELIHARAAN SARANA">INSTALASI PEMELIHARAAN SARANA</option><option value="INSTALASI RADIOLOGI">INSTALASI RADIOLOGI</option><option value="INSTALASI RAWAT JALAN">INSTALASI RAWAT JALAN</option><option value="INSTALASI REHAB MEDIK">INSTALASI REHAB MEDIK</option><option value="INSTALASI REKAM MEDIS">INSTALASI REKAM MEDIS</option><option value="INSTALASI SIM RS">INSTALASI SIM RS</option><option value="RUANG ANGGREK">RUANG ANGGREK</option><option value="RUANG ANYELIR">RUANG ANYELIR</option><option value="RUANG ASTER">RUANG ASTER</option><option value="RUANG BOUGENVILLE">RUANG BOUGENVILLE</option><option value="RUANG FLAMBOYAN">RUANG FLAMBOYAN</option><option value="RUANG HCU">RUANG HCU</option><option value="RUANG ICCU">RUANG ICCU</option><option value="RUANG ICU">RUANG ICU</option><option value="RUANG IDIK">RUANG IDIK</option><option value="RUANG LILY">RUANG LILY</option><option value="RUANG MAWAR">RUANG MAWAR</option><option value="RUANG TERATAI ASOKA">RUANG TERATAI ASOKA</option><option value="RUANG VK BERSALIN">RUANG VK BERSALIN</option><option value="UNIT AMBULANCE">UNIT AMBULANCE</option><option value="UNIT CSSD">UNIT CSSD</option><option value="UNIT KEUANGAN KASIR">UNIT KEUANGAN KASIR</option><option value="UNIT KLAIM">UNIT KLAIM</option><option value="UNIT LOUNDRY">UNIT LOUNDRY</option><option value="UNIT PEMULASARAN JENAZAH">UNIT PEMULASARAN JENAZAH</option><option value="UNIT PENGADUAN">UNIT PENGADUAN</option><option value="UNIT PPI">UNIT PPI</option></select></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-xs font-bold text-slate-600 mb-1">Nama</label><input type="text" id="editNama" class="w-full border p-2 rounded text-xs focus:ring-2 focus:ring-cyan-500 outline-none"></div>
+                    <div><label class="block text-xs font-bold text-slate-600 mb-1">Ruangan</label><select id="editRuangan" class="w-full border p-2 rounded text-xs focus:ring-2 focus:ring-cyan-500 outline-none">
+                        <option value="INSTALASI ANESTESI">INSTALASI ANESTESI</option><option value="INSTALASI BEDAH SENTRAL">INSTALASI BEDAH SENTRAL</option><option value="INSTALASI FARMASI">INSTALASI FARMASI</option><option value="INSTALASI GAT">INSTALASI GAT</option><option value="INSTALASI GAWAT DARURAT">INSTALASI GAWAT DARURAT</option><option value="INSTALASI GIZI">INSTALASI GIZI</option><option value="INSTALASI HEMODIALISA">INSTALASI HEMODIALISA</option><option value="INSTALASI IGD DOKTER">INSTALASI IGD DOKTER</option><option value="INSTALASI IGD PERAWAT">INSTALASI IGD PERAWAT</option><option value="INSTALASI LABORATORIUM">INSTALASI LABORATORIUM</option><option value="INSTALASI PEMELIHARAAN LINGKUNGAN">INSTALASI PEMELIHARAAN LINGKUNGAN</option><option value="INSTALASI PEMELIHARAAN SARANA">INSTALASI PEMELIHARAAN SARANA</option><option value="INSTALASI RADIOLOGI">INSTALASI RADIOLOGI</option><option value="INSTALASI RAWAT JALAN">INSTALASI RAWAT JALAN</option><option value="INSTALASI REHAB MEDIK">INSTALASI REHAB MEDIK</option><option value="INSTALASI REKAM MEDIS">INSTALASI REKAM MEDIS</option><option value="INSTALASI SIM RS">INSTALASI SIM RS</option><option value="RUANG ANGGREK">RUANG ANGGREK</option><option value="RUANG ANYELIR">RUANG ANYELIR</option><option value="RUANG ASTER">RUANG ASTER</option><option value="RUANG BOUGENVILLE">RUANG BOUGENVILLE</option><option value="RUANG FLAMBOYAN">RUANG FLAMBOYAN</option><option value="RUANG HCU">RUANG HCU</option><option value="RUANG ICCU">RUANG ICCU</option><option value="RUANG ICU">RUANG ICU</option><option value="RUANG IDIK">RUANG IDIK</option><option value="RUANG LILY">RUANG LILY</option><option value="RUANG MAWAR">RUANG MAWAR</option><option value="RUANG TERATAI ASOKA">RUANG TERATAI ASOKA</option><option value="RUANG VK BERSALIN">RUANG VK BERSALIN</option><option value="UNIT AMBULANCE">UNIT AMBULANCE</option><option value="UNIT CSSD">UNIT CSSD</option><option value="UNIT KEUANGAN KASIR">UNIT KEUANGAN KASIR</option><option value="UNIT KLAIM">UNIT KLAIM</option><option value="UNIT LOUNDRY">UNIT LOUNDRY</option><option value="UNIT PEMULASARAN JENAZAH">UNIT PEMULASARAN JENAZAH</option><option value="UNIT PENGADUAN">UNIT PENGADUAN</option><option value="UNIT PPI">UNIT PPI</option></select></div>
                 </div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">Status</label><select id="editStatus" class="w-full border p-2 rounded text-xs"><option value="ACTIVE">ACTIVE</option><option value="BLOCKED">BLOCKED</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">Status</label><select id="editStatus" class="w-full border p-2 rounded text-xs font-bold focus:ring-2 focus:ring-cyan-500 outline-none"><option value="ACTIVE">ACTIVE</option><option value="BLOCKED">BLOCKED</option></select></div>
                 <div class="border rounded-lg p-4 bg-slate-50">
                     <p class="text-xs font-bold text-slate-700 mb-2">Hak Akses Fitur:</p>
                     <div class="grid grid-cols-2 gap-3 text-xs">
@@ -118,69 +119,35 @@
 
     <!-- VIEW: DASHBOARD -->
     <div id="view-dashboard" class="hidden flex w-full h-full bg-slate-100 relative">
-        
-        <!-- MOBILE OVERLAY (BACKDROP) -->
-        <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden transition-opacity" onclick="toggleSidebar()"></div>
-
         <!-- SIDEBAR -->
         <div id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-cyan-950 text-white flex flex-col shadow-2xl z-30 transform -translate-x-full transition-transform duration-300 md:translate-x-0 md:relative">
             <div class="p-6 border-b border-cyan-900 bg-cyan-950 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 bg-cyan-500 rounded-lg flex items-center justify-center font-bold text-lg shadow-lg">RS</div>
-                    <div><h1 class="text-lg font-bold leading-tight">SIM RS</h1><p class="text-[10px] text-cyan-400">E-Rekap v2.2</p></div>
-                </div>
-                <!-- Tombol Close di Sidebar (Mobile Only) -->
+                <div class="flex items-center space-x-3"><div class="w-9 h-9 bg-cyan-500 rounded-lg flex items-center justify-center font-bold text-lg shadow-lg">RS</div><div><h1 class="text-lg font-bold leading-tight">SIM RS</h1><p class="text-[10px] text-cyan-400">E-Rekap v2.2</p></div></div>
                 <button onclick="toggleSidebar()" class="md:hidden text-cyan-300 hover:text-white"><i class="fas fa-times text-lg"></i></button>
             </div>
-            
-            <!-- User Profile Widget in Sidebar -->
             <div class="px-6 py-4 border-b border-cyan-900">
-                <div class="bg-cyan-900/50 rounded-lg p-3 border border-cyan-800">
-                    <p class="text-[10px] text-cyan-300 uppercase tracking-wider mb-1">Login Sebagai</p>
-                    <p id="userDisplay" class="text-sm font-bold truncate text-white">User</p>
-                    <span id="roleDisplay" class="text-[9px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded mt-1 inline-block">USER</span>
-                </div>
+                <div class="bg-cyan-900/50 rounded-lg p-3 border border-cyan-800"><p class="text-[10px] text-cyan-300 uppercase tracking-wider mb-1">Login Sebagai</p><p id="userDisplay" class="text-sm font-bold truncate text-white">User</p><span id="roleDisplay" class="text-[9px] bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded mt-1 inline-block">USER</span></div>
             </div>
-
             <nav class="flex-1 overflow-y-auto py-2 space-y-1">
-                <a href="#" onclick="navTo('home')" class="nav-item active flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
-                    <i class="fas fa-home w-5 group-hover:text-cyan-400 transition"></i> <span class="text-sm ml-3">Beranda</span>
-                </a>
-                <a href="#" onclick="navTo('upload')" id="nav-upload" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
-                    <i class="fas fa-cloud-upload-alt w-5 group-hover:text-cyan-400 transition"></i> <span class="text-sm ml-3">Upload Data</span>
-                </a>
-                <a href="#" onclick="navTo('download')" id="nav-download" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
-                    <i class="fas fa-file-excel w-5 group-hover:text-cyan-400 transition"></i> <span class="text-sm ml-3">Download Rekap</span>
-                </a>
-                <a href="#" onclick="navTo('history')" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
-                    <i class="fas fa-history w-5 group-hover:text-cyan-400 transition"></i> <span class="text-sm ml-3">Riwayat</span>
-                </a>
-                
-                <!-- Admin Only Menus -->
+                <a href="#" onclick="navTo('home')" class="nav-item active flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group"><i class="fas fa-home w-5"></i> <span class="text-sm ml-3">Beranda</span></a>
+                <a href="#" onclick="navTo('upload')" id="nav-upload" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group"><i class="fas fa-cloud-upload-alt w-5"></i> <span class="text-sm ml-3">Upload Data</span></a>
+                <a href="#" onclick="navTo('download')" id="nav-download" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group"><i class="fas fa-file-excel w-5"></i> <span class="text-sm ml-3">Download Rekap</span></a>
+                <a href="#" onclick="navTo('history')" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group"><i class="fas fa-history w-5"></i> <span class="text-sm ml-3">Riwayat</span></a>
                 <div id="adminMenu" class="hidden mt-4 pt-4 border-t border-cyan-900">
                     <p class="px-6 text-[10px] text-cyan-500 font-bold mb-2 uppercase">Administrator</p>
-                    <a href="#" onclick="navTo('files')" id="nav-files" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
-                        <i class="fas fa-folder-open w-5 text-purple-400"></i> <span class="text-sm ml-3">File Uploads</span>
-                    </a>
-                    <a href="#" onclick="navTo('users')" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group">
-                        <i class="fas fa-users-cog w-5 text-yellow-400"></i> <span class="text-sm ml-3">Manajemen User</span>
-                    </a>
+                    <a href="#" onclick="navTo('files')" id="nav-files" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group"><i class="fas fa-folder-open w-5 text-purple-400"></i> <span class="text-sm ml-3">File Uploads</span></a>
+                    <a href="#" onclick="navTo('users')" class="nav-item flex items-center px-6 py-3.5 hover:bg-cyan-900 transition text-cyan-100 hover:text-white group"><i class="fas fa-users-cog w-5 text-yellow-400"></i> <span class="text-sm ml-3">Manajemen User</span></a>
                 </div>
             </nav>
             <div class="p-4 bg-cyan-950 border-t border-cyan-900"><button onclick="doLogout()" class="w-full flex items-center justify-center space-x-2 text-cyan-400 hover:text-white py-2 text-sm transition hover:bg-cyan-900 rounded"><i class="fas fa-sign-out-alt"></i> <span>Keluar</span></button></div>
         </div>
 
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
         <!-- MAIN CONTENT -->
         <div class="flex-1 overflow-y-auto relative bg-slate-100 flex flex-col h-full w-full">
-            <!-- Header Mobile / Topbar -->
             <div class="bg-white shadow-sm h-16 flex items-center px-4 md:px-8 justify-between sticky top-0 z-10 border-b border-slate-200">
-                <div class="flex items-center">
-                    <!-- Tombol Hamburger (Mobile) -->
-                    <button onclick="toggleSidebar()" class="md:hidden mr-4 text-slate-600 hover:text-cyan-600 focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    <h2 class="text-lg md:text-xl font-bold text-slate-800 truncate" id="pageTitle">Dashboard</h2>
-                </div>
+                <div class="flex items-center"><button onclick="toggleSidebar()" class="md:hidden mr-4 text-slate-600 hover:text-cyan-600 focus:outline-none"><i class="fas fa-bars text-xl"></i></button><h2 class="text-lg md:text-xl font-bold text-slate-800 truncate" id="pageTitle">Dashboard</h2></div>
                 <div class="text-xs md:text-sm text-slate-500 font-medium bg-slate-50 px-3 py-1 rounded-full border border-slate-200 hidden md:block" id="currentDate"></div>
             </div>
 
@@ -188,16 +155,9 @@
                 <!-- PAGE: HOME -->
                 <div id="page-home" class="page-content fade-in">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-                        <div class="bg-gradient-to-br from-cyan-600 to-blue-800 p-6 rounded-2xl shadow-lg text-white relative overflow-hidden">
-                            <p class="text-cyan-100 text-xs uppercase font-bold mb-1">Status Akun</p>
-                            <div class="flex items-center space-x-2"><div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div><p class="text-2xl font-bold">Aktif</p></div>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-slate-400 text-xs uppercase font-bold mb-1">Ruangan Anda</p><p class="text-lg font-bold text-slate-800 truncate" id="dashRoom">-</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-slate-400 text-xs uppercase font-bold mb-1">Periode Aktif</p><p class="text-lg font-bold text-slate-800" id="currentMonthDisplay">-</p>
-                        </div>
+                        <div class="bg-gradient-to-br from-cyan-600 to-blue-800 p-6 rounded-2xl shadow-lg text-white relative overflow-hidden"><p class="text-cyan-100 text-xs uppercase font-bold mb-1">Status Akun</p><div class="flex items-center space-x-2"><div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div><p class="text-2xl font-bold">Aktif</p></div></div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><p class="text-slate-400 text-xs uppercase font-bold mb-1">Ruangan Anda</p><p class="text-lg font-bold text-slate-800 truncate" id="dashRoom">-</p></div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"><p class="text-slate-400 text-xs uppercase font-bold mb-1">Periode Aktif</p><p class="text-lg font-bold text-slate-800" id="currentMonthDisplay">-</p></div>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
                         <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
@@ -222,7 +182,7 @@
                             </div>
                             <div><label class="block text-xs font-bold text-slate-600 mb-2">File (xlsx)</label><input type="file" id="fileInput" multiple accept=".xlsx" class="w-full border p-2 rounded-xl text-sm"><div id="fileListContainer" class="hidden mt-3 bg-slate-50 p-3 rounded-lg"><ul id="selectedFilesList" class="text-xs text-slate-600 ml-1"></ul></div></div>
                             <div id="uploadLogArea" class="hidden mt-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"><div class="bg-slate-50 px-4 py-3 border-b border-slate-200 flex justify-between items-center"><h3 class="text-xs font-bold text-slate-700">Status</h3><span id="progressText" class="text-xs font-bold text-cyan-600 bg-cyan-100 px-2.5 py-0.5 rounded-full">0/0</span></div><div class="p-4 max-h-60 overflow-y-auto custom-scroll"><ul id="uploadLogList" class="space-y-3"></ul></div></div>
-                            <button type="submit" id="btnUpload" class="w-full bg-cyan-600 text-white py-3.5 rounded-xl font-bold hover:shadow-lg">Mulai Upload</button>
+                            <button type="submit" id="btnUpload" class="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-3.5 rounded-xl font-bold hover:shadow-lg transition">Mulai Upload</button>
                         </form>
                     </div>
                 </div>
@@ -280,17 +240,13 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            // Toggle translate class
             if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full'); // Show
-                overlay.classList.remove('hidden');
+                sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden');
             } else {
-                sidebar.classList.add('-translate-x-full'); // Hide
-                overlay.classList.add('hidden');
+                sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden');
             }
         }
 
-        // Close sidebar when menu item clicked on mobile
         function navTo(pageId) { 
             document.querySelectorAll('.page-content').forEach(el=>el.classList.add('hidden')); 
             document.getElementById('page-'+pageId).classList.remove('hidden'); 
@@ -298,16 +254,8 @@
             const navLink = document.querySelector(`a[onclick="navTo('${pageId}')"]`);
             if(navLink) navLink.classList.add('active');
             document.getElementById('pageTitle').textContent = pageId === 'home' ? 'Dashboard' : pageId.charAt(0).toUpperCase() + pageId.slice(1);
-            
-            // SAVE STATE
             localStorage.setItem('simrs_last_page', pageId);
-
-            // Auto close mobile sidebar
-            if (window.innerWidth < 768) {
-                document.getElementById('sidebar').classList.add('-translate-x-full');
-                document.getElementById('sidebarOverlay').classList.add('hidden');
-            }
-
+            if (window.innerWidth < 768) { document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('sidebarOverlay').classList.add('hidden'); }
             if(pageId === 'home') loadRoomStatus(); 
             if(pageId === 'history') loadLogs();
             if(pageId === 'users') loadUsers();
@@ -320,17 +268,13 @@
 
         function loginSuccess(user) {
             currentUser = user;
-            // SAVE SESSION
             localStorage.setItem('simrs_user', JSON.stringify(user));
-
             document.getElementById('view-login').classList.add('hidden');
             document.getElementById('view-dashboard').classList.remove('hidden');
             document.getElementById('userDisplay').textContent = user.nama;
             document.getElementById('roleDisplay').textContent = user.role;
             document.getElementById('dashRoom').textContent = user.ruangan;
             setupPermissions(user);
-            
-            // Restore Page or Default to Home
             const lastPage = localStorage.getItem('simrs_last_page') || 'home';
             navTo(lastPage);
         }
@@ -345,42 +289,33 @@
             if(!hasPerm(user, 'view_files') && !isAdmin) document.querySelector('a[onclick="navTo(\'files\')"]').classList.add('hidden');
         }
         function hasPerm(u, p) { if(!u.permissions) return false; return u.permissions.includes('ALL') || u.permissions.includes(p); }
-        
-        function doLogout() { 
-            Swal.fire({title:'Logout?', icon:'warning', showCancelButton:true, confirmButtonColor:'#d33', confirmButtonText:'Ya'}).then((r)=>{
-                if(r.isConfirmed){
-                    currentUser=null;
-                    localStorage.removeItem('simrs_user');
-                    localStorage.removeItem('simrs_last_page');
-                    location.reload();
-                }
-            }); 
-        }
-        
+        function doLogout() { Swal.fire({title:'Logout?', icon:'warning', showCancelButton:true, confirmButtonColor:'#d33', confirmButtonText:'Ya'}).then((r)=>{if(r.isConfirmed){currentUser=null;localStorage.removeItem('simrs_user');localStorage.removeItem('simrs_last_page');location.reload();}}); }
         function toggleLoader(show, text="Memproses...") { const l=document.getElementById('globalLoading'); l.classList.toggle('hidden', !show); if(show) document.getElementById('loadingText').textContent=text; }
 
         function loadRoomStatus() {
-            document.getElementById('listUploaded').innerHTML='<li class="text-center text-xs text-slate-400">Memuat...</li>';
-            document.getElementById('listPending').innerHTML='<li class="text-center text-xs text-slate-400">Memuat...</li>';
+            document.getElementById('listUploaded').innerHTML='<li class="text-center text-xs text-slate-400 py-4"><i class="fas fa-circle-notch fa-spin mr-2"></i>Sedang memeriksa data...</li>';
+            document.getElementById('listPending').innerHTML='<li class="text-center text-xs text-slate-400 py-4"><i class="fas fa-circle-notch fa-spin mr-2"></i>Sedang memeriksa data...</li>';
             fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'get_room_status'})}).then(r=>r.json()).then(d=>{
                 if(d.status==='success'){
-                    document.getElementById('countUploaded').textContent=d.data.uploaded.length;
-                    document.getElementById('countPending').textContent=d.data.pending.length;
+                    document.getElementById('countUploaded').textContent=d.data.uploaded.length; document.getElementById('countPending').textContent=d.data.pending.length;
                     const lU=document.getElementById('listUploaded'); lU.innerHTML='';
-                    if(d.data.uploaded.length===0) lU.innerHTML='<li class="text-xs text-slate-400 italic text-center">Belum ada</li>';
-                    d.data.uploaded.forEach(i=>{ lU.innerHTML+=`<li class="flex justify-between p-2 bg-emerald-50 rounded border border-emerald-100"><span class="text-xs font-bold text-emerald-800">${i.room}</span><span class="text-[10px] text-emerald-600 bg-white px-2 py-0.5 rounded">${new Date(i.time).toLocaleDateString()}</span></li>`; });
+                    if(d.data.uploaded.length===0) lU.innerHTML='<div class="flex flex-col items-center justify-center py-6 text-slate-400"><i class="fas fa-inbox text-3xl mb-2 opacity-30"></i><span class="text-xs">Belum ada yang upload bulan ini.</span></div>';
+                    d.data.uploaded.forEach(i=>{ lU.innerHTML+=`<li class="flex items-center justify-between p-3 bg-emerald-50/50 rounded-lg border border-emerald-100 hover:bg-emerald-50 transition group"><div class="flex items-center"><div class="w-2 h-2 bg-emerald-500 rounded-full mr-3"></div><span class="text-xs font-bold text-slate-700">${i.room}</span></div><div class="flex flex-col items-end"><span class="text-[10px] text-emerald-700 font-medium bg-emerald-100 px-2 py-0.5 rounded-md flex items-center"><i class="fas fa-check mr-1"></i> Selesai</span><span class="text-[9px] text-slate-400 mt-0.5">${new Date(i.time).toLocaleDateString('id-ID', {day:'numeric', month:'short'})}, ${new Date(i.time).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</span></div></li>`; });
                     const lP=document.getElementById('listPending'); lP.innerHTML='';
-                    if(d.data.pending.length===0) lP.innerHTML='<li class="text-xs text-emerald-500 italic text-center">Lengkap!</li>';
-                    d.data.pending.forEach(r=>{ lP.innerHTML+=`<li class="flex items-center p-2 bg-rose-50 rounded border border-rose-100"><i class="fas fa-exclamation-circle text-rose-400 mr-2 text-xs"></i><span class="text-xs font-semibold text-rose-700">${r}</span></li>`; });
+                    if(d.data.pending.length===0) lP.innerHTML='<div class="flex flex-col items-center justify-center py-6 text-emerald-500"><i class="fas fa-star text-4xl mb-2 animate-bounce"></i><span class="text-sm font-bold">Luar Biasa!</span><span class="text-xs text-slate-500">Semua ruangan sudah upload.</span></div>';
+                    d.data.pending.forEach(r=>{ lP.innerHTML+=`<li class="flex items-center justify-between p-3 bg-rose-50/30 rounded-lg border border-rose-100 hover:bg-rose-50 transition group"><div class="flex items-center"><div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-500 mr-3"><i class="fas fa-exclamation text-xs"></i></div><span class="text-xs font-semibold text-slate-700 group-hover:text-rose-700 transition">${r}</span></div><span class="text-[9px] text-rose-400 font-medium italic">Menunggu...</span></li>`; });
                 }
             });
         }
 
         function loadUploadedFiles() {
-            const tbody = document.getElementById('filesTableBody'); tbody.innerHTML='<tr><td colspan="4" class="text-center p-8 text-slate-400"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat...</td></tr>';
+            const tbody = document.getElementById('filesTableBody'); tbody.innerHTML='<tr><td colspan="4" class="text-center p-8 text-slate-400"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat daftar file...</td></tr>';
             fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'get_uploaded_files', userEmail:currentUser.email})}).then(r=>r.json()).then(d=>{
                 tbody.innerHTML=''; if(d.status==='success'){ if(d.data.length===0) tbody.innerHTML='<tr><td colspan="4" class="text-center p-4">Kosong</td></tr>';
-                d.data.forEach(f=>{ tbody.innerHTML+=`<tr class="border-b hover:bg-slate-50 transition"><td class="p-4 text-slate-500 text-xs">${new Date(f.time).toLocaleString()}</td><td class="p-4 text-xs font-medium text-slate-700">${f.uploader}</td><td class="p-4 text-xs text-purple-700 font-bold"><i class="fas fa-file-excel mr-2"></i>${f.fileName}</td><td class="p-4 text-xs text-slate-600">${f.room}</td></tr>`; }); } else tbody.innerHTML=`<tr><td colspan="4" class="text-center text-red-500">${d.message}</td></tr>`;
+                d.data.forEach(f=>{ 
+                    let fileLink = f.url && f.url !== '#' ? `<a href="${f.url}" target="_blank" class="text-purple-600 hover:text-purple-800 hover:underline flex items-center"><i class="fas fa-file-excel mr-2"></i>${f.fileName} <i class="fas fa-external-link-alt ml-1 text-[10px]"></i></a>` : `<span class="text-gray-500"><i class="fas fa-file-excel mr-2"></i>${f.fileName}</span>`;
+                    tbody.innerHTML+=`<tr class="border-b hover:bg-slate-50 transition"><td class="p-4 text-slate-500 text-xs">${new Date(f.time).toLocaleString()}</td><td class="p-4 text-xs font-medium text-slate-700">${f.uploader}</td><td class="p-4 text-xs font-bold">${fileLink}</td><td class="p-4 text-xs text-slate-600 bg-slate-50">${f.room}</td></tr>`; 
+                }); } else tbody.innerHTML=`<tr><td colspan="4" class="text-center text-red-500">${d.message}</td></tr>`;
             });
         }
 
@@ -435,7 +370,6 @@
         function deleteUser(e){ Swal.fire({title:'Hapus User?', icon:'warning', showCancelButton:true, confirmButtonColor:'#ef4444', confirmButtonText:'Hapus'}).then((r)=>{ if(r.isConfirmed){ toggleLoader(true, 'Menghapus...'); fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'update_user', adminEmail:currentUser.email, targetEmail:e, isDelete:true})}).then(j=>j.json()).then(d=>{ toggleLoader(false); if(d.status==='success') loadUsers(); else Swal.fire('Gagal',d.message,'error'); }); } }); }
         function loadLogs() { const t = document.getElementById('historyTableBody'); t.innerHTML='<tr><td colspan="4" class="text-center p-8 text-slate-400"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat histori...</td></tr>'; fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'get_logs', userEmail:currentUser.email})}).then(r=>r.json()).then(d=>{ t.innerHTML=''; if(d.status==='success') d.data.forEach(l=>{ let c=l.status==='SUKSES'?'text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded':'text-rose-600 bg-rose-50 px-2 py-0.5 rounded'; t.innerHTML+=`<tr class="border-b hover:bg-slate-50 transition"><td class="p-4 text-slate-500 text-xs">${new Date(l.time).toLocaleString()}</td><td class="p-4 font-bold text-xs text-slate-700 uppercase tracking-wide">${l.action}</td><td class="p-4 text-xs text-slate-600">${l.detail}</td><td class="p-4"><span class="text-[10px] font-bold ${c}">${l.status}</span></td></tr>`; }); }); }
 
-        // --- INIT SESSION ---
         document.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('simrs_user');
             if(savedUser) {
