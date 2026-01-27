@@ -3,152 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Rekapitulasi Ruangan RS</title>
-    <!-- Tailwind CSS untuk styling cepat & modern -->
+    <title>Aplikasi Rekapitulasi Ruangan RS</title>
+    <!-- Tailwind CSS untuk tampilan modern -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SweetAlert2 untuk notifikasi pop-up -->
+    <!-- SweetAlert2 untuk notifikasi yang bagus -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Font Awesome untuk ikon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Animasi kustom */
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4 font-sans">
+<body class="bg-gradient-to-br from-blue-50 to-slate-200 min-h-screen flex items-center justify-center p-4 font-sans">
 
-    <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden fade-in border border-gray-100">
         
-        <!-- Header -->
-        <div class="bg-blue-600 p-6 text-center">
-            <h1 class="text-white text-2xl font-bold mb-1"><i class="fas fa-hospital-alt mr-2"></i>Sistem Upload Rekap</h1>
-            <p class="text-blue-100 text-sm">Upload file Excel (.xlsx) per ruangan</p>
+        <!-- Header Section -->
+        <div class="bg-blue-600 p-6 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full bg-blue-700 opacity-20 transform skew-y-3"></div>
+            <h1 class="text-white text-2xl font-bold relative z-10"><i class="fas fa-file-medical-alt mr-2"></i>E-Rekap Ruangan</h1>
+            <p class="text-blue-100 text-sm relative z-10 mt-1">Upload Data Excel Harian/Bulanan</p>
         </div>
 
-        <!-- Form Area -->
+        <!-- Form Section -->
         <div class="p-8">
-            <form id="rekapForm" class="space-y-6">
+            <form id="rekapForm" class="space-y-5">
                 
-                <!-- Input Ruangan -->
+                <!-- Pilihan Ruangan -->
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="room">
-                        <i class="fas fa-door-open mr-1"></i> Pilih Ruangan
+                    <label class="block text-gray-700 text-sm font-bold mb-2 ml-1" for="room">
+                        <i class="fas fa-clinic-medical mr-2 text-blue-500"></i>Pilih Ruangan
                     </label>
                     <div class="relative">
-                        <select id="room" required class="block appearance-none w-full bg-gray-50 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500">
-                            <option value="" disabled selected>-- Pilih Asal Data --</option>
+                        <select id="room" required class="block w-full bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none cursor-pointer">
+                            <option value="" disabled selected>-- Pilih Sumber Data --</option>
                             <option value="Ruang HD">Ruang HD</option>
                             <option value="Ruang ICCU">Ruang ICCU</option>
-                            <option value="Ruang UGD">Ruang UGD</option>
                             <option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option>
                             <option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option>
+                            <option value="Ruang UGD">Ruang UGD</option>
                         </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                            <i class="fas fa-chevron-down text-xs"></i>
                         </div>
                     </div>
                 </div>
 
-                <!-- Input File -->
+                <!-- Input File Upload -->
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="fileInput">
-                        <i class="fas fa-file-excel mr-1"></i> File Excel (.xlsx)
+                    <label class="block text-gray-700 text-sm font-bold mb-2 ml-1">
+                        <i class="fas fa-file-excel mr-2 text-green-600"></i>File Laporan (.xlsx)
                     </label>
-                    <div class="flex items-center justify-center w-full">
-                        <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-blue-300 border-dashed rounded-lg cursor-pointer bg-blue-50 hover:bg-blue-100 transition-colors">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <i class="fas fa-cloud-upload-alt text-3xl text-blue-500 mb-2"></i>
-                                <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Klik untuk upload</span></p>
-                                <p class="text-xs text-gray-500">Format .xlsx only</p>
+                    <div class="w-full">
+                        <label for="fileInput" class="flex flex-col items-center justify-center w-full h-36 border-2 border-blue-200 border-dashed rounded-xl cursor-pointer bg-blue-50/50 hover:bg-blue-50 hover:border-blue-400 transition-all group">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-blue-400 group-hover:text-blue-600 mb-2 transition-colors"></i>
+                                <p class="mb-1 text-sm text-gray-500 group-hover:text-gray-700"><span class="font-semibold">Klik untuk upload</span></p>
+                                <p class="text-xs text-gray-400">Format wajib: .xlsx</p>
                             </div>
                             <input id="fileInput" type="file" class="hidden" accept=".xlsx" required />
                         </label>
                     </div>
-                    <p id="fileNameDisplay" class="text-xs text-center text-gray-600 mt-2 font-medium"></p>
+                    <!-- Tempat Menampilkan Nama File -->
+                    <div id="fileInfo" class="hidden mt-3 p-3 bg-green-50 border border-green-100 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center overflow-hidden">
+                            <i class="fas fa-file-csv text-green-600 mr-2 flex-shrink-0"></i>
+                            <span id="fileNameDisplay" class="text-sm text-green-800 font-medium truncate">nama_file.xlsx</span>
+                        </div>
+                        <button type="button" id="clearFile" class="text-gray-400 hover:text-red-500 ml-2 focus:outline-none">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Tombol Submit -->
-                <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105">
-                    <i class="fas fa-paper-plane mr-2"></i> Kirim Data
+                <!-- Submit Button -->
+                <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all transform hover:-translate-y-0.5 mt-2">
+                    <i class="fas fa-paper-plane mr-2"></i> Kirim ke Rekap
                 </button>
             </form>
 
             <!-- Loading Indicator -->
-            <div id="loading" class="hidden mt-6 text-center">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-200 border-t-blue-600"></div>
-                <p class="text-gray-600 text-sm mt-2 font-semibold">Sedang memproses data...</p>
-                <p class="text-gray-400 text-xs">Mohon jangan tutup halaman ini.</p>
+            <div id="loading" class="hidden mt-6 text-center py-2">
+                <div class="inline-flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+                    <div class="w-3 h-3 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                    <div class="w-3 h-3 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                </div>
+                <p class="text-gray-600 text-sm mt-2 font-medium">Sedang memproses data ke Spreadsheet...</p>
+                <p class="text-xs text-gray-400">Mohon jangan tutup halaman ini.</p>
             </div>
         </div>
         
         <!-- Footer -->
-        <div class="bg-gray-50 p-4 text-center border-t">
-            <p class="text-xs text-gray-400">&copy; 2024 Sistem Rekap Rumah Sakit</p>
+        <div class="bg-gray-50 p-4 text-center border-t border-gray-100">
+            <p class="text-xs text-gray-400">Sistem Informasi Manajemen Rumah Sakit &copy; 2024</p>
         </div>
     </div>
 
     <script>
         // ==========================================
-        // KONFIGURASI PENTING
-        // Paste URL Web App dari Google Script Deploy di sini
+        // URL SCRIPT GOOGLE APPS SCRIPT
         // ==========================================
-        const SCRIPT_URL = 'GANTI_DENGAN_URL_WEB_APP_GOOGLE_SCRIPT_ANDA'; 
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3rpUezIgW-9J5trsiNXttnHCt_B7dLnBNX8ntkRfbAbWj8XbktJ-kMcUOaPRx0jfj/exec';
 
-        // Tampilkan nama file saat user memilih file
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const fileName = e.target.files[0]?.name || "";
-            document.getElementById('fileNameDisplay').textContent = fileName ? "File terpilih: " + fileName : "";
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const clearFileBtn = document.getElementById('clearFile');
+        const form = document.getElementById('rekapForm');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const loading = document.getElementById('loading');
+
+        // Handle File Selection Display
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                fileNameDisplay.textContent = file.name;
+                fileInfo.classList.remove('hidden');
+                fileInfo.classList.add('fade-in');
+            }
         });
 
-        document.getElementById('rekapForm').addEventListener('submit', function(e) {
+        // Handle Clear File
+        clearFileBtn.addEventListener('click', function() {
+            fileInput.value = '';
+            fileInfo.classList.add('hidden');
+        });
+
+        // Handle Form Submit
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const fileInput = document.getElementById('fileInput');
-            const room = document.getElementById('room').value;
-            const btnSubmit = document.getElementById('btnSubmit');
-            const loading = document.getElementById('loading');
-
             if (fileInput.files.length === 0) {
-                Swal.fire('Peringatan', 'Silakan pilih file Excel terlebih dahulu.', 'warning');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'File Kosong',
+                    text: 'Silakan pilih file Excel (.xlsx) terlebih dahulu!',
+                    confirmButtonColor: '#2563EB'
+                });
                 return;
             }
 
-            // UI State: Loading
+            const room = document.getElementById('room').value;
+            const file = fileInput.files[0];
+
+            // UI Loading State
             btnSubmit.classList.add('hidden');
             loading.classList.remove('hidden');
 
-            const file = fileInput.files[0];
             const reader = new FileReader();
-
-            // Baca file sebagai Data URL (Base64)
             reader.readAsDataURL(file);
+            
             reader.onload = function(e) {
-                const rawBase64 = e.target.result.split(',')[1]; // Hapus header data:application/...
+                const rawBase64 = e.target.result.split(',')[1]; 
 
                 const payload = {
-                    base64: rawBase64,
-                    type: file.type,
-                    name: file.name
+                    filename: file.name,
+                    file: rawBase64,
+                    room: room
                 };
 
-                // Kirim ke Google Apps Script
                 fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: JSON.stringify({
-                        filename: file.name,
-                        file: rawBase64,
-                        room: room
-                    })
-                    // mode: 'no-cors' // JANGAN GUNAKAN no-cors agar kita bisa terima response JSON
+                    body: JSON.stringify(payload)
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
                         Swal.fire({
-                            title: 'Berhasil!',
-                            text: `Data dari ${room} berhasil disimpan dan direkap. (${data.data.rowsAdded} baris)`,
+                            title: 'Sukses!',
+                            html: `Data <b>${room}</b> berhasil direkap.<br><span class="text-sm text-gray-500">${data.data.rowsAdded} data pegawai ditambahkan.</span>`,
                             icon: 'success',
-                            confirmButtonColor: '#3085d6'
+                            confirmButtonColor: '#2563EB'
                         });
                         // Reset Form
-                        document.getElementById('rekapForm').reset();
-                        document.getElementById('fileNameDisplay').textContent = "";
+                        form.reset();
+                        fileInfo.classList.add('hidden');
                     } else {
                         throw new Error(data.message);
                     }
@@ -157,16 +190,21 @@
                     console.error('Error:', error);
                     Swal.fire({
                         title: 'Gagal',
-                        text: 'Terjadi kesalahan: ' + error.message,
+                        text: 'Terjadi kesalahan sistem: ' + error.message,
                         icon: 'error',
-                        footer: 'Pastikan file Excel tidak dikunci password.'
+                        confirmButtonColor: '#EF4444'
                     });
                 })
                 .finally(() => {
-                    // Kembalikan UI ke semula
                     btnSubmit.classList.remove('hidden');
                     loading.classList.add('hidden');
                 });
+            };
+            
+            reader.onerror = function() {
+                Swal.fire('Error', 'Gagal membaca file.', 'error');
+                btnSubmit.classList.remove('hidden');
+                loading.classList.add('hidden');
             };
         });
     </script>
