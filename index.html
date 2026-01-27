@@ -295,16 +295,47 @@
         function loadRoomStatus() {
             document.getElementById('listUploaded').innerHTML='<li class="text-center text-xs text-slate-400 py-4"><i class="fas fa-circle-notch fa-spin mr-2"></i>Sedang memeriksa data...</li>';
             document.getElementById('listPending').innerHTML='<li class="text-center text-xs text-slate-400 py-4"><i class="fas fa-circle-notch fa-spin mr-2"></i>Sedang memeriksa data...</li>';
-            fetch(SCRIPT_URL, {method:'POST', body:JSON.stringify({action:'get_room_status'})}).then(r=>r.json()).then(d=>{
-                if(d.status==='success'){
-                    document.getElementById('countUploaded').textContent=d.data.uploaded.length; document.getElementById('countPending').textContent=d.data.pending.length;
-                    const lU=document.getElementById('listUploaded'); lU.innerHTML='';
-                    if(d.data.uploaded.length===0) lU.innerHTML='<div class="flex flex-col items-center justify-center py-6 text-slate-400"><i class="fas fa-inbox text-3xl mb-2 opacity-30"></i><span class="text-xs">Belum ada yang upload bulan ini.</span></div>';
-                    d.data.uploaded.forEach(i=>{ lU.innerHTML+=`<li class="flex items-center justify-between p-3 bg-emerald-50/50 rounded-lg border border-emerald-100 hover:bg-emerald-50 transition group"><div class="flex items-center"><div class="w-2 h-2 bg-emerald-500 rounded-full mr-3"></div><span class="text-xs font-bold text-slate-700">${i.room}</span></div><div class="flex flex-col items-end"><span class="text-[10px] text-emerald-700 font-medium bg-emerald-100 px-2 py-0.5 rounded-md flex items-center"><i class="fas fa-check mr-1"></i> Selesai</span><span class="text-[9px] text-slate-400 mt-0.5">${new Date(i.time).toLocaleDateString('id-ID', {day:'numeric', month:'short'})}, ${new Date(i.time).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</span></div></li>`; });
-                    const lP=document.getElementById('listPending'); lP.innerHTML='';
-                    if(d.data.pending.length===0) lP.innerHTML='<div class="flex flex-col items-center justify-center py-6 text-emerald-500"><i class="fas fa-star text-4xl mb-2 animate-bounce"></i><span class="text-sm font-bold">Luar Biasa!</span><span class="text-xs text-slate-500">Semua ruangan sudah upload.</span></div>';
-                    d.data.pending.forEach(r=>{ lP.innerHTML+=`<li class="flex items-center justify-between p-3 bg-rose-50/30 rounded-lg border border-rose-100 hover:bg-rose-50 transition group"><div class="flex items-center"><div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-500 mr-3"><i class="fas fa-exclamation text-xs"></i></div><span class="text-xs font-semibold text-slate-700 group-hover:text-rose-700 transition">${r}</span></div><span class="text-[9px] text-rose-400 font-medium italic">Menunggu...</span></li>`; });
+            
+            fetch(SCRIPT_URL, {
+                method:'POST', 
+                body:JSON.stringify({action:'get_room_status'})
+            })
+            .then(r => r.json())
+            .then(d => {
+                if(d.status === 'success'){
+                    document.getElementById('countUploaded').textContent = d.data.uploaded.length; 
+                    document.getElementById('countPending').textContent = d.data.pending.length;
+                    
+                    const lU = document.getElementById('listUploaded'); 
+                    lU.innerHTML='';
+                    if(d.data.uploaded.length === 0) {
+                        lU.innerHTML='<div class="flex flex-col items-center justify-center py-6 text-slate-400"><i class="fas fa-inbox text-3xl mb-2 opacity-30"></i><span class="text-xs">Belum ada yang upload bulan ini.</span></div>';
+                    } else {
+                        d.data.uploaded.forEach(i => { 
+                            lU.innerHTML += `<li class="flex items-center justify-between p-3 bg-emerald-50/50 rounded-lg border border-emerald-100 hover:bg-emerald-50 transition group"><div class="flex items-center"><div class="w-2 h-2 bg-emerald-500 rounded-full mr-3"></div><span class="text-xs font-bold text-slate-700">${i.room}</span></div><div class="flex flex-col items-end"><span class="text-[10px] text-emerald-700 font-medium bg-emerald-100 px-2 py-0.5 rounded-md flex items-center"><i class="fas fa-check mr-1"></i> Selesai</span><span class="text-[9px] text-slate-400 mt-0.5">${new Date(i.time).toLocaleDateString('id-ID', {day:'numeric', month:'short'})}, ${new Date(i.time).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</span></div></li>`; 
+                        });
+                    }
+
+                    const lP = document.getElementById('listPending'); 
+                    lP.innerHTML='';
+                    if(d.data.pending.length === 0) {
+                        lP.innerHTML='<div class="flex flex-col items-center justify-center py-6 text-emerald-500"><i class="fas fa-star text-4xl mb-2 animate-bounce"></i><span class="text-sm font-bold">Luar Biasa!</span><span class="text-xs text-slate-500">Semua ruangan sudah upload.</span></div>';
+                    } else {
+                        d.data.pending.forEach(r => { 
+                            lP.innerHTML += `<li class="flex items-center justify-between p-3 bg-rose-50/30 rounded-lg border border-rose-100 hover:bg-rose-50 transition group"><div class="flex items-center"><div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-500 mr-3"><i class="fas fa-exclamation text-xs"></i></div><span class="text-xs font-semibold text-slate-700 group-hover:text-rose-700 transition">${r}</span></div><span class="text-[9px] text-rose-400 font-medium italic">Menunggu...</span></li>`; 
+                        });
+                    }
+                } else {
+                    // HANDLE ERROR FROM SERVER
+                    document.getElementById('listUploaded').innerHTML = `<li class="text-center text-xs text-rose-500 py-4"><i class="fas fa-exclamation-triangle mr-2"></i>Gagal memuat: ${d.message}</li>`;
+                    document.getElementById('listPending').innerHTML = `<li class="text-center text-xs text-rose-500 py-4">Gagal memuat data.</li>`;
                 }
+            })
+            .catch(err => {
+                // HANDLE NETWORK/JSON ERROR
+                console.error("Fetch Error:", err);
+                document.getElementById('listUploaded').innerHTML = `<li class="text-center text-xs text-rose-500 py-4"><i class="fas fa-wifi mr-2"></i>Koneksi Bermasalah. Coba Refresh.</li>`;
+                document.getElementById('listPending').innerHTML = `<li class="text-center text-xs text-rose-500 py-4">Koneksi Bermasalah.</li>`;
             });
         }
 
