@@ -3,398 +3,427 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Manajemen Jadwal RS</title>
-    
+    <title>Sistem Manajemen RS</title>
+    <!-- Tailwind & Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .tab-btn.active { 
-            background-color: white; 
-            color: #2563EB; 
-            border-bottom: 2px solid #2563EB;
-            font-weight: bold;
-        }
-        .tab-btn:not(.active) {
-            color: #6B7280;
-            background-color: #F3F4F6;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Sidebar active state */
+        .nav-item.active { background-color: #1E40AF; border-right: 4px solid #60A5FA; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 font-sans">
+<body class="bg-gray-100 font-sans h-screen overflow-hidden flex">
 
-    <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl overflow-hidden fade-in border border-gray-200">
-        
-        <!-- Header -->
-        <div class="bg-blue-600 p-6 text-center text-white">
-            <h1 class="text-2xl font-bold"><i class="fas fa-hospital-user mr-2"></i>Sistem Jadwal RS</h1>
-            <p class="text-blue-100 text-xs mt-1 uppercase tracking-wider">Multi-File Upload & Smart Cleaner</p>
-        </div>
-
-        <!-- Tab Navigation -->
-        <div class="flex border-b border-gray-200">
-            <button onclick="switchTab('upload')" id="tab-upload" class="tab-btn active w-1/2 py-4 text-sm font-medium focus:outline-none">
-                <i class="fas fa-cloud-upload-alt mr-2"></i> Upload Data
-            </button>
-            <button onclick="switchTab('download')" id="tab-download" class="tab-btn w-1/2 py-4 text-sm font-medium focus:outline-none">
-                <i class="fas fa-download mr-2"></i> Download Rekap
-            </button>
-        </div>
-
-        <div class="p-8 relative">
+    <!-- ================= VIEW: LOGIN ================= -->
+    <div id="view-login" class="absolute inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-96 text-center fade-in">
+            <div class="mb-6">
+                <i class="fas fa-hospital-alt text-5xl text-blue-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-1">E-Rekap Jadwal RS</h2>
+            <p class="text-gray-500 text-sm mb-6">Silakan login dengan akun Google</p>
             
-            <!-- SECTION UPLOAD -->
-            <div id="section-upload" class="fade-in">
-                <form id="uploadForm" class="space-y-4">
-                    <!-- Bulan & Ruangan -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-gray-700 text-xs font-bold mb-2 uppercase">Bulan</label>
-                            <select id="uploadMonth" required class="block w-full bg-gray-50 border border-gray-300 text-sm py-2 px-3 rounded-lg focus:ring-blue-500 focus:outline-none">
-                                <option value="" disabled selected>-- Pilih --</option>
-                                <option value="Januari">Januari</option>
-                                <option value="Februari">Februari</option>
-                                <option value="Maret">Maret</option>
-                                <option value="April">April</option>
-                                <option value="Mei">Mei</option>
-                                <option value="Juni">Juni</option>
-                                <option value="Juli">Juli</option>
-                                <option value="Agustus">Agustus</option>
-                                <option value="September">September</option>
-                                <option value="Oktober">Oktober</option>
-                                <option value="November">November</option>
-                                <option value="Desember">Desember</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-xs font-bold mb-2 uppercase">Ruangan</label>
-                            <select id="room" required class="block w-full bg-gray-50 border border-gray-300 text-sm py-2 px-3 rounded-lg focus:ring-blue-500 focus:outline-none">
-                                <option value="" disabled selected>-- Pilih --</option>
-                                <option value="Ruang HD">Ruang HD</option>
-                                <option value="Ruang ICCU">Ruang ICCU</option>
-                                <option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option>
-                                <option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option>
-                                <option value="Ruang UGD">Ruang UGD</option>
-                                <option value="Ruang Operasi">Ruang Operasi</option>
-                                <option value="Ruang Bersalin">Ruang Bersalin</option>
-                                <option value="Poli Rawat Jalan">Poli Rawat Jalan</option>
-                            </select>
-                        </div>
-                    </div>
+            <!-- Google Button Container -->
+            <!-- CLIENT ID ANDA SUDAH DIPASANG DI SINI -->
+            <div id="g_id_onload"
+                 data-client_id="783459415718-mp0vsmd2lopajf2ut0aqc6drjrs95pu8.apps.googleusercontent.com" 
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+            
+            <p id="loginStatus" class="mt-4 text-xs text-red-500 font-semibold"></p>
+        </div>
+    </div>
 
-                    <!-- File Input -->
-                    <div>
-                        <label class="block text-gray-700 text-xs font-bold mb-2 uppercase tracking-wide">
-                            File Jadwal (.xlsx)
-                        </label>
-                        <div class="relative">
-                            <input id="fileInput" type="file" class="hidden" accept=".xlsx" multiple required />
-                            <label for="fileInput" class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 transition group">
-                                <div class="flex flex-col items-center justify-center pt-2">
-                                    <i class="fas fa-folder-plus text-2xl text-blue-400 group-hover:text-blue-600 mb-1"></i>
-                                    <p class="text-xs text-gray-500 group-hover:text-gray-700">Klik untuk pilih file (Bisa banyak)</p>
-                                </div>
-                            </label>
-                        </div>
-                        
-                        <div id="fileListContainer" class="mt-2 hidden">
-                            <p class="text-xs font-bold text-gray-600 mb-1">File Terpilih:</p>
-                            <ul id="selectedFilesList" class="list-disc ml-5 text-xs text-gray-500 max-h-20 overflow-y-auto"></ul>
-                        </div>
-                    </div>
+    <!-- ================= VIEW: REGISTER (Modal) ================= -->
+    <div id="view-register" class="hidden absolute inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-md fade-in">
+            <h2 class="text-xl font-bold mb-4 text-blue-600">Pendaftaran Pengguna Baru</h2>
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700">Email</label>
+                    <input type="text" id="regEmail" disabled class="w-full bg-gray-100 border p-2 rounded text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700">Nama Lengkap</label>
+                    <input type="text" id="regNama" required class="w-full border p-2 rounded text-sm focus:ring-2 ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700">Ruangan</label>
+                    <select id="regRuangan" required class="w-full border p-2 rounded text-sm focus:ring-2 ring-blue-500 outline-none">
+                        <option value="">-- Pilih Ruangan --</option>
+                        <option value="Ruang HD">Ruang HD</option>
+                        <option value="Ruang ICCU">Ruang ICCU</option>
+                        <option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option>
+                        <option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option>
+                        <option value="Ruang UGD">Ruang UGD</option>
+                        <option value="Ruang Operasi">Ruang Operasi</option>
+                        <option value="Ruang Bersalin">Ruang Bersalin</option>
+                        <option value="Poli Rawat Jalan">Poli Rawat Jalan</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700">No HP / WhatsApp</label>
+                    <input type="text" id="regHP" required class="w-full border p-2 rounded text-sm focus:ring-2 ring-blue-500 outline-none">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700">Daftar Sekarang</button>
+            </form>
+        </div>
+    </div>
 
-                    <!-- AREA LOG HASIL UPLOAD -->
-                    <div id="uploadLogArea" class="hidden mt-4 bg-gray-50 rounded-lg border border-gray-200 p-4 max-h-80 overflow-y-auto">
-                        <h3 class="text-xs font-bold text-gray-700 mb-3 border-b pb-2 flex justify-between items-center">
-                            <span>Log Proses Upload:</span>
-                            <span id="progressText" class="text-blue-600">0/0</span>
-                        </h3>
-                        <ul id="uploadLogList" class="space-y-3">
-                            <!-- Log items akan muncul di sini -->
-                        </ul>
-                    </div>
+    <!-- ================= VIEW: DASHBOARD ================= -->
+    <div id="view-dashboard" class="hidden flex w-full h-full">
+        
+        <!-- SIDEBAR -->
+        <div class="w-64 bg-blue-800 text-white flex flex-col shadow-xl">
+            <div class="p-6 border-b border-blue-700">
+                <h1 class="text-lg font-bold"><i class="fas fa-heartbeat mr-2"></i>SIM RS</h1>
+                <p id="userDisplay" class="text-xs text-blue-200 mt-1">Halo, User</p>
+                <span id="roleDisplay" class="text-[10px] bg-blue-900 px-2 py-0.5 rounded-full mt-1 inline-block">USER</span>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4 space-y-1">
+                <a href="#" onclick="navTo('home')" class="nav-item active flex items-center px-6 py-3 hover:bg-blue-700 transition">
+                    <i class="fas fa-home w-6"></i> <span class="text-sm">Beranda</span>
+                </a>
+                <a href="#" onclick="navTo('upload')" id="nav-upload" class="nav-item flex items-center px-6 py-3 hover:bg-blue-700 transition">
+                    <i class="fas fa-upload w-6"></i> <span class="text-sm">Upload Data</span>
+                </a>
+                <a href="#" onclick="navTo('download')" id="nav-download" class="nav-item flex items-center px-6 py-3 hover:bg-blue-700 transition">
+                    <i class="fas fa-file-download w-6"></i> <span class="text-sm">Download Rekap</span>
+                </a>
+                <a href="#" onclick="navTo('history')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-700 transition">
+                    <i class="fas fa-history w-6"></i> <span class="text-sm">Riwayat</span>
+                </a>
+                <!-- Admin Menu -->
+                <div id="adminMenu" class="hidden mt-4 pt-4 border-t border-blue-700">
+                    <p class="px-6 text-xs text-blue-400 font-bold mb-2 uppercase">Admin Area</p>
+                    <a href="#" onclick="navTo('users')" class="nav-item flex items-center px-6 py-3 hover:bg-blue-700 transition">
+                        <i class="fas fa-users-cog w-6"></i> <span class="text-sm">Manajemen User</span>
+                    </a>
+                </div>
+            </nav>
 
-                    <button type="submit" id="btnUpload" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-md transition transform hover:-translate-y-0.5">
-                        <i class="fas fa-paper-plane mr-2"></i> Proses Semua File
-                    </button>
-                </form>
+            <div class="p-4 border-t border-blue-700">
+                <button onclick="doLogout()" class="flex items-center text-red-300 hover:text-white transition text-sm">
+                    <i class="fas fa-sign-out-alt w-6"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 bg-gray-50 overflow-y-auto p-8 relative">
+            
+            <!-- CONTENT: HOME -->
+            <div id="page-home" class="page-content fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
+                        <p class="text-gray-500 text-sm">Status Akun</p>
+                        <p class="text-xl font-bold text-gray-800">Aktif</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
+                        <p class="text-gray-500 text-sm">Ruangan Anda</p>
+                        <p class="text-xl font-bold text-gray-800" id="dashRoom">-</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- SECTION DOWNLOAD -->
-            <div id="section-download" class="hidden fade-in">
-                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                    <p class="text-sm text-green-800"><i class="fas fa-info-circle mr-2"></i>Download rekapitulasi lengkap per bulan.</p>
+            <!-- CONTENT: UPLOAD -->
+            <div id="page-upload" class="page-content hidden fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Upload Jadwal</h2>
+                <div class="bg-white p-6 rounded-lg shadow-md max-w-2xl">
+                    <form id="uploadForm" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold mb-1">Bulan</label>
+                                <select id="uploadMonth" class="w-full border p-2 rounded text-sm">
+                                    <option value="Januari">Januari</option>
+                                    <option value="Februari">Februari</option>
+                                    <option value="Maret">Maret</option>
+                                    <option value="April">April</option>
+                                    <option value="Mei">Mei</option>
+                                    <option value="Juni">Juni</option>
+                                    <option value="Juli">Juli</option>
+                                    <option value="Agustus">Agustus</option>
+                                    <option value="September">September</option>
+                                    <option value="Oktober">Oktober</option>
+                                    <option value="November">November</option>
+                                    <option value="Desember">Desember</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">Ruangan</label>
+                                <!-- Dropdown ini akan dilock otomatis untuk user biasa -->
+                                <select id="uploadRoom" class="w-full border p-2 rounded text-sm bg-gray-100">
+                                    <option value="Ruang HD">Ruang HD</option>
+                                    <option value="Ruang ICCU">Ruang ICCU</option>
+                                    <option value="Ruang Rawat Inap 1">Ruang Rawat Inap 1</option>
+                                    <option value="Ruang Rawat Inap 2">Ruang Rawat Inap 2</option>
+                                    <option value="Ruang UGD">Ruang UGD</option>
+                                    <option value="Ruang Operasi">Ruang Operasi</option>
+                                    <option value="Ruang Bersalin">Ruang Bersalin</option>
+                                    <option value="Poli Rawat Jalan">Poli Rawat Jalan</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-bold mb-1">File .xlsx (Multiple)</label>
+                            <input type="file" id="fileInput" multiple accept=".xlsx" class="w-full border p-2 rounded text-sm">
+                        </div>
+                        
+                        <!-- Log Area -->
+                        <div id="uploadLog" class="hidden text-xs bg-gray-50 p-2 rounded h-40 overflow-y-auto border"></div>
+                        
+                        <button type="submit" id="btnUpload" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700">Upload</button>
+                    </form>
                 </div>
-
-                <form id="downloadForm" class="space-y-6">
-                    <div>
-                        <label class="block text-gray-700 text-xs font-bold mb-2 uppercase">Bulan Rekap</label>
-                        <select id="downloadMonth" required class="block w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg focus:ring-green-500 focus:outline-none">
-                            <option value="" disabled selected>-- Pilih Bulan --</option>
+            </div>
+            
+            <!-- CONTENT: HISTORY -->
+            <div id="page-history" class="page-content hidden fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Riwayat Aktivitas</h2>
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-100 text-gray-700">
+                            <tr>
+                                <th class="p-3">Waktu</th>
+                                <th class="p-3">Aksi</th>
+                                <th class="p-3">Detail</th>
+                                <th class="p-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- CONTENT: DOWNLOAD -->
+            <div id="page-download" class="page-content hidden fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Download Rekap</h2>
+                <div class="bg-white p-6 rounded-lg shadow max-w-lg">
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold mb-1">Pilih Bulan</label>
+                        <select id="dlMonth" class="w-full border p-2 rounded text-sm">
                             <option value="Januari">Januari</option>
                             <option value="Februari">Februari</option>
                             <option value="Maret">Maret</option>
                             <option value="April">April</option>
-                            <option value="Mei">Mei</option>
-                            <option value="Juni">Juni</option>
-                            <option value="Juli">Juli</option>
-                            <option value="Agustus">Agustus</option>
-                            <option value="September">September</option>
-                            <option value="Oktober">Oktober</option>
-                            <option value="November">November</option>
-                            <option value="Desember">Desember</option>
+                            <!-- dst -->
                         </select>
                     </div>
-
-                    <button type="submit" id="btnDownload" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-lg shadow-md transition">
-                        <i class="fas fa-file-download mr-2"></i> Download Excel
-                    </button>
-                </form>
+                    <button onclick="doDownload()" class="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700">Download Excel</button>
+                </div>
             </div>
 
-            <!-- Loading Overlay -->
-            <div id="loading" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col justify-center items-center rounded-b-2xl">
-                <div class="w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
-                <h3 class="text-gray-800 font-bold text-sm mt-4" id="loadingText">Memproses...</h3>
-                <p id="loadingSubText" class="text-gray-500 text-xs mt-1 text-center px-4">Mohon tunggu</p>
+            <!-- CONTENT: USER MANAGEMENT (Admin Only) -->
+            <div id="page-users" class="page-content hidden fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Manajemen User</h2>
+                    <button onclick="loadUsers()" class="text-sm bg-gray-200 px-3 py-1 rounded"><i class="fas fa-sync"></i> Refresh</button>
+                </div>
+                <div class="bg-white rounded-lg shadow overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-800 text-white">
+                            <tr>
+                                <th class="p-3">Email</th>
+                                <th class="p-3">Nama</th>
+                                <th class="p-3">Role</th>
+                                <th class="p-3">Ruangan</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody"></tbody>
+                    </table>
+                </div>
             </div>
 
         </div>
     </div>
 
+    <!-- Loading Overlay -->
+    <div id="globalLoading" class="hidden fixed inset-0 bg-white/80 z-[100] flex flex-col items-center justify-center">
+        <div class="w-10 h-10 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+        <p class="mt-2 text-sm text-gray-600">Memproses...</p>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
     <script>
+        // --- KONFIGURASI URL WEB APP ANDA ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5e8er60YVZ1m0r4Gn7RdkupWttdB1pyiXwD5Qdj7A1wF42abaSxy1QAvBhFI1Fone/exec';
-
-        // --- TAB SWITCHING ---
-        function switchTab(tab) {
-            document.getElementById('section-upload').classList.toggle('hidden', tab !== 'upload');
-            document.getElementById('section-download').classList.toggle('hidden', tab !== 'download');
-            document.getElementById('tab-upload').classList.toggle('active', tab === 'upload');
-            document.getElementById('tab-download').classList.toggle('active', tab === 'download');
-        }
-
-        // --- UI UTILS ---
-        const loading = document.getElementById('loading');
-        const loadingText = document.getElementById('loadingText');
-        const loadingSubText = document.getElementById('loadingSubText');
         
-        function toggleLoading(show, text = "Memproses...", sub = "") {
-            loading.classList.toggle('hidden', !show);
-            if(show) {
-                loadingText.textContent = text;
-                loadingSubText.textContent = sub;
-            }
-        }
+        let currentUser = null; 
 
-        // --- FUNGSI MENAMPILKAN DETAIL LOG (POPUP) ---
-        window.showDetailLog = function(fileName, logsEncoded) {
-            const logs = JSON.parse(decodeURIComponent(logsEncoded));
-            
-            let tableRows = logs.map(log => `
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="p-2 text-center">${log.row}</td>
-                    <td class="p-2 font-mono text-gray-600">${log.nip}</td>
-                    <td class="p-2 text-center">${log.dateIndex}</td>
-                    <td class="p-2 text-red-600 text-[10px]">${log.original}</td>
-                    <td class="p-2 text-green-600 font-bold text-[10px]">${log.fixed}</td>
-                    <td class="p-2 text-gray-500 text-[10px] italic">${log.reason}</td>
-                </tr>
-            `).join('');
-
-            const tableHtml = `
-                <div class="text-left text-xs mb-2 text-gray-600">
-                    File: <b>${fileName}</b><br>
-                    Jumlah Perbaikan: <b>${logs.length}</b> data
-                </div>
-                <div class="overflow-y-auto max-h-64 border rounded">
-                    <table class="w-full text-xs text-left">
-                        <thead class="bg-gray-100 text-gray-700 sticky top-0">
-                            <tr>
-                                <th class="p-2 text-center">Baris</th>
-                                <th class="p-2">NIP</th>
-                                <th class="p-2 text-center">Tgl</th>
-                                <th class="p-2">Asli</th>
-                                <th class="p-2">Hasil</th>
-                                <th class="p-2">Sebab</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRows}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            Swal.fire({
-                title: 'Rincian Perbaikan Data',
-                html: tableHtml,
-                width: '600px',
-                showCloseButton: true,
-                focusConfirm: false,
-                confirmButtonText: 'Tutup'
-            });
-        };
-
-        // --- FUNGSI LOG ITEM UTAMA ---
-        function addLogItem(fileName, status, message, updatedRows = 0, fixedDataCount = 0, changeLog = []) {
-            const list = document.getElementById('uploadLogList');
-            const li = document.createElement('li');
-            li.className = "flex items-start p-3 bg-white rounded shadow-sm border border-gray-100";
-            
-            let iconHtml = '';
-            let statusColor = '';
-            let detailText = '';
-            let actionButton = '';
-
-            if (status === 'success') {
-                iconHtml = '<div class="bg-green-100 text-green-600 rounded-full p-1 mr-3"><i class="fas fa-check text-xs"></i></div>';
-                statusColor = 'text-green-700';
-                
-                let fixMsg = "";
-                if (fixedDataCount > 0) {
-                    fixMsg = `<br><span class="text-orange-600 text-[10px] font-semibold"><i class="fas fa-wrench mr-1"></i>${fixedDataCount} data diperbaiki formatnya.</span>`;
-                    
-                    // Encode data log agar aman dikirim ke fungsi onClick
-                    const encodedLogs = encodeURIComponent(JSON.stringify(changeLog));
-                    actionButton = `
-                        <button onclick="showDetailLog('${fileName}', '${encodedLogs}')" class="mt-2 text-[10px] bg-blue-50 text-blue-600 px-2 py-1 rounded hover:bg-blue-100 border border-blue-200 transition">
-                            <i class="fas fa-list-ul mr-1"></i> Lihat Rincian Perbaikan
-                        </button>
-                    `;
+        // --- AUTH & LOGIN ---
+        function handleCredentialResponse(response) {
+            toggleLoader(true);
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'verify_token',
+                    credential: response.credential
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                toggleLoader(false);
+                if (data.status === 'success') {
+                    loginSuccess(data.data);
+                } else if (data.status === 'new_user') {
+                    showRegisterModal(data.data.email);
                 } else {
-                    fixMsg = `<br><span class="text-green-600 text-[10px]"><i class="fas fa-star mr-1"></i>Format Data Sempurna</span>`;
+                    document.getElementById('loginStatus').textContent = data.message;
                 }
-
-                detailText = `<span class="font-bold text-gray-700">Update NIP: ${updatedRows} pegawai.</span>${fixMsg}`;
-            } else {
-                iconHtml = '<div class="bg-red-100 text-red-600 rounded-full p-1 mr-3"><i class="fas fa-times text-xs"></i></div>';
-                statusColor = 'text-red-700';
-                detailText = `Gagal: ${message}`;
-            }
-            
-            li.innerHTML = `
-                ${iconHtml}
-                <div class="flex-1">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="font-bold text-xs text-gray-800 truncate w-40" title="${fileName}">${fileName}</span>
-                        <span class="text-[10px] font-bold uppercase ${statusColor}">${status === 'success' ? 'SUKSES' : 'ERROR'}</span>
-                    </div>
-                    <p class="text-xs text-gray-500 leading-tight">${detailText}</p>
-                    ${actionButton}
-                </div>
-            `;
-            list.appendChild(li);
+            })
+            .catch(err => {
+                toggleLoader(false);
+                alert("Error Login: " + err);
+            });
         }
 
-        // --- FILE SELECTION PREVIEW ---
-        const fileInput = document.getElementById('fileInput');
-        fileInput.addEventListener('change', function(e) {
-            const files = e.target.files;
-            const listContainer = document.getElementById('fileListContainer');
-            const ul = document.getElementById('selectedFilesList');
-            ul.innerHTML = '';
+        function showRegisterModal(email) {
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-register').classList.remove('hidden');
+            document.getElementById('regEmail').value = email;
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            toggleLoader(true);
             
-            if (files.length > 0) {
-                listContainer.classList.remove('hidden');
-                for (let i = 0; i < files.length; i++) {
-                    const li = document.createElement('li');
-                    li.textContent = files[i].name;
-                    ul.appendChild(li);
+            const payload = {
+                action: 'register',
+                email: document.getElementById('regEmail').value,
+                nama: document.getElementById('regNama').value,
+                ruangan: document.getElementById('regRuangan').value,
+                hp: document.getElementById('regHP').value
+            };
+
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+            .then(res => res.json())
+            .then(data => {
+                toggleLoader(false);
+                if(data.status === 'success') {
+                    alert("Registrasi Berhasil! Silakan login kembali.");
+                    location.reload(); 
+                } else {
+                    alert(data.message);
                 }
-            } else {
-                listContainer.classList.add('hidden');
-            }
+            });
         });
 
-        // --- BULK UPLOAD HANDLER ---
+        function loginSuccess(user) {
+            currentUser = user;
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-dashboard').classList.remove('hidden');
+            
+            document.getElementById('userDisplay').textContent = user.nama;
+            document.getElementById('roleDisplay').textContent = user.role;
+            document.getElementById('dashRoom').textContent = user.ruangan;
+
+            setupPermissions(user);
+            navTo('home');
+        }
+
+        function setupPermissions(user) {
+            const isAdmin = user.role === 'ADMIN' || user.role === 'SUPER_ADMIN';
+            
+            if(isAdmin) document.getElementById('adminMenu').classList.remove('hidden');
+            
+            const upRoom = document.getElementById('uploadRoom');
+            if(!isAdmin) {
+                upRoom.value = user.ruangan;
+                upRoom.disabled = true; // KUNCI RUANGAN
+            } else {
+                upRoom.disabled = false;
+            }
+            
+            // Sembunyikan menu download jika tidak ada izin
+            if(!user.permissions.includes('download') && !user.permissions.includes('ALL')) {
+                document.getElementById('nav-download').classList.add('hidden');
+            }
+        }
+
+        function doLogout() {
+            currentUser = null;
+            location.reload();
+        }
+
+        // --- NAVIGATION ---
+        function navTo(pageId) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('page-' + pageId).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            // Highlight sidebar logic can be improved here
+            
+            if(pageId === 'history') loadLogs();
+            if(pageId === 'users') loadUsers();
+        }
+
+        function toggleLoader(show) {
+            document.getElementById('globalLoading').classList.toggle('hidden', !show);
+        }
+
+        // --- UPLOAD LOGIC ---
         document.getElementById('uploadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const files = fileInput.files;
-            
-            if (files.length === 0) {
-                Swal.fire('Warning', 'Pilih minimal satu file', 'warning');
-                return;
-            }
+            const files = document.getElementById('fileInput').files;
+            if(files.length === 0) return Swal.fire('Error', 'Pilih file!', 'error');
 
-            const logArea = document.getElementById('uploadLogArea');
-            const logList = document.getElementById('uploadLogList');
-            logList.innerHTML = '';
-            logArea.classList.remove('hidden');
+            const logDiv = document.getElementById('uploadLog');
+            logDiv.classList.remove('hidden');
+            logDiv.innerHTML = '<b>Memulai proses...</b><br>';
             
-            const totalFiles = files.length;
-            let successCount = 0;
-            let failCount = 0;
-
-            const room = document.getElementById('room').value;
+            const room = document.getElementById('uploadRoom').value;
             const month = document.getElementById('uploadMonth').value;
 
-            const btn = document.getElementById('btnUpload');
-            btn.disabled = true;
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sedang Memproses...';
-
-            for (let i = 0; i < totalFiles; i++) {
-                const file = files[i];
-                const progressMsg = `${i + 1} dari ${totalFiles}`;
-                document.getElementById('progressText').textContent = progressMsg;
-                toggleLoading(true, `Mengupload File ${progressMsg}`, file.name);
-
+            for(let i=0; i<files.length; i++) {
+                let file = files[i];
+                logDiv.innerHTML += `Uploading: ${file.name}... `;
+                
                 try {
-                    const base64 = await toBase64(file);
-                    
-                    const response = await fetch(SCRIPT_URL, {
+                    let base64 = await toBase64(file);
+                    let res = await fetch(SCRIPT_URL, {
                         method: 'POST',
                         body: JSON.stringify({
                             action: 'upload',
-                            filename: file.name,
+                            userEmail: currentUser.email,
                             file: base64,
+                            filename: file.name,
                             room: room,
                             month: month
                         })
-                    });
-                    
-                    const result = await response.json();
+                    }).then(r => r.json());
 
-                    if (result.status === 'success') {
-                        const rows = result.data.updatedRows || 0;
-                        const fixed = result.data.fixedDataCount || 0;
-                        const logs = result.data.changeLog || [];
-                        
-                        addLogItem(file.name, 'success', result.message, rows, fixed, logs);
-                        successCount++;
+                    if(res.status === 'success') {
+                         let fixedMsg = res.data.fixedDataCount > 0 ? 
+                             `<span class="text-orange-600">(${res.data.fixedDataCount} data diperbaiki)</span>` : "";
+                         
+                         logDiv.innerHTML += `<span class="text-green-600 font-bold">SUKSES</span> ${fixedMsg}<br>`;
+                         
+                         // Jika ada detail log perbaikan
+                         if(res.data.changeLog && res.data.changeLog.length > 0) {
+                             let details = res.data.changeLog.map(l => 
+                                 `Baris ${l.row}: ${l.orig} -> ${l.fixed} (${l.reason})`
+                             ).join("<br>");
+                             logDiv.innerHTML += `<div class="ml-4 text-[10px] text-gray-500 mb-1 border-l pl-2">${details}</div>`;
+                         }
                     } else {
-                        addLogItem(file.name, 'error', result.message);
-                        failCount++;
+                         logDiv.innerHTML += `<span class="text-red-600 font-bold">GAGAL: ${res.message}</span><br>`;
                     }
-
-                } catch (err) {
-                    console.error(err);
-                    addLogItem(file.name, 'error', 'Koneksi Terputus / Error Jaringan');
-                    failCount++;
+                } catch(err) {
+                    logDiv.innerHTML += `<span class="text-red-600">NETWORK ERROR</span><br>`;
                 }
-            }
-
-            toggleLoading(false);
-            btn.disabled = false;
-            btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Proses Semua File';
-
-            if (failCount === 0) {
-                Swal.fire({
-                    title: 'Selesai!',
-                    text: `Semua ${totalFiles} file berhasil diproses.`,
-                    icon: 'success'
-                });
-            } else {
-                Swal.fire({
-                    title: 'Selesai dengan Catatan',
-                    html: `Sukses: <b>${successCount}</b><br>Gagal: <b class="text-red-600">${failCount}</b><br>Silakan cek log di bawah form.`,
-                    icon: 'warning'
-                });
             }
         });
 
@@ -407,45 +436,129 @@
             });
         }
 
-        // --- DOWNLOAD HANDLER ---
-        document.getElementById('downloadForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const month = document.getElementById('downloadMonth').value;
-            toggleLoading(true, "Menyiapkan Download...", "Sedang mengambil data dari server");
-
+        // --- DOWNLOAD LOGIC ---
+        function doDownload() {
+            const month = document.getElementById('dlMonth').value;
+            toggleLoader(true);
+            
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'download',
+                    userEmail: currentUser.email,
                     month: month
                 })
             })
             .then(res => res.json())
             .then(data => {
-                toggleLoading(false);
-                if (data.status === 'success') {
+                toggleLoader(false);
+                if(data.status === 'success') {
                     const link = document.createElement('a');
                     link.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + data.data.file;
                     link.download = data.data.filename;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    Swal.fire({
-                        title: 'Berhasil',
-                        text: 'File rekap telah didownload.',
-                        icon: 'success',
-                        timer: 1500,
-                        showConfirmButton: false
+                    Swal.fire('Berhasil', 'File didownload', 'success');
+                } else {
+                    Swal.fire('Gagal', data.message, 'error');
+                }
+            });
+        }
+
+        // --- ADMIN: USER MANAGEMENT ---
+        function loadUsers() {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center p-4">Loading...</td></tr>';
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'get_users',
+                    adminEmail: currentUser.email
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                tbody.innerHTML = '';
+                if(data.status === 'success') {
+                    data.data.forEach(u => {
+                        let actions = `
+                            <button onclick="deleteUser('${u.email}')" class="text-red-500 hover:text-red-700 ml-2" title="Hapus"><i class="fas fa-trash"></i></button>
+                        `;
+                        if(u.role === 'SUPER_ADMIN') actions = '<span class="text-gray-300">-</span>';
+
+                        tbody.innerHTML += `
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-3">${u.email}</td>
+                                <td class="p-3 font-medium">${u.nama}</td>
+                                <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${u.role}</span></td>
+                                <td class="p-3">${u.ruangan}</td>
+                                <td class="p-3 text-xs">${u.status}</td>
+                                <td class="p-3 text-center">${actions}</td>
+                            </tr>
+                        `;
                     });
                 } else {
-                    throw new Error(data.message);
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-red-500">${data.message}</td></tr>`;
                 }
-            })
-            .catch(err => {
-                toggleLoading(false);
-                Swal.fire('Gagal Download', err.message, 'error');
             });
-        });
+        }
+        
+        function deleteUser(email) {
+            if(!confirm("Yakin hapus user ini?")) return;
+            toggleLoader(true);
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'update_user',
+                    adminEmail: currentUser.email,
+                    targetEmail: email,
+                    delete: true
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                toggleLoader(false);
+                if(data.status === 'success') {
+                    loadUsers();
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        // --- HISTORY ---
+        function loadLogs() {
+            const tbody = document.getElementById('historyTableBody');
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center p-4">Loading...</td></tr>';
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'get_logs',
+                    userEmail: currentUser.email
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                tbody.innerHTML = '';
+                if(data.status === 'success') {
+                    data.data.forEach(log => {
+                        let date = new Date(log.time).toLocaleString();
+                        let statusColor = log.status === 'SUKSES' ? 'text-green-600' : 'text-red-600';
+                        tbody.innerHTML += `
+                            <tr class="border-b">
+                                <td class="p-3 text-gray-500 text-xs">${date}</td>
+                                <td class="p-3 font-bold text-xs">${log.action}</td>
+                                <td class="p-3 text-xs">${log.detail}</td>
+                                <td class="p-3 font-bold ${statusColor} text-xs">${log.status}</td>
+                            </tr>
+                        `;
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
